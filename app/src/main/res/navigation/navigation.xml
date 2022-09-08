@@ -3,11 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainMenuFragment">
+    app:startDestination="@id/writeMessageFragment">
 
     <fragment
         android:id="@+id/mainMenuFragment"
-        android:name="com.example.imageencryptor.MainMenuFragment"
+        android:name="com.example.imageencryptor.mainmenu.MainMenuFragment"
         android:label="fragment_main_menu"
-        tools:layout="@layout/fragment_main_menu" />
+        tools:layout="@layout/fragment_main_menu" >
+        <action
+            android:id="@+id/action_mainMenuFragment_to_writeMessageFragment"
+            app:destination="@id/writeMessageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/writeMessageFragment"
+        android:name="com.example.imageencryptor.writemessage.WriteMessageFragment"
+        android:label="fragment_write_message"
+        tools:layout="@layout/fragment_write_message" />
 </navigation>
