@@ -3,6 +3,7 @@ package com.example.imageencryptor.encryption
 import java.math.BigInteger
 
 data class Key(
+    var name: String,
     var modulus: BigInteger,
     var publicExponent: BigInteger,
     var privateExponent: BigInteger? = null

@@ -1,15 +1,16 @@
 package com.example.imageencryptor.encryption
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageencryptor.R
+import timber.log.Timber
 
-class KeyAdapter : RecyclerView.Adapter<KeyAdapter.ViewHolder>() {
-
-    var keys = listOf<Key>()
+class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewHolder>() {
+    var data = listOf<Key>()
     set(value) {
         field = value
         notifyDataSetChanged()
@@ -17,21 +18,20 @@ class KeyAdapter : RecyclerView.Adapter<KeyAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-
-        return ViewHolder(layoutInflater.inflate(R.layout.key_list_item, parent, false))
+        val view = layoutInflater
+            .inflate(R.layout.key_list_item, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = "key"
+        holder.textView.setText(data[position].name)
     }
 
     override fun getItemCount(): Int {
-        return keys.size
+        return data.size
     }
 
-    class ViewHolder(val view: View): RecyclerView.ViewHolder(view){
-        val textView = view.findViewById<TextView>(R.id.tempTextView)
-
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+        val textView: TextView = view.findViewById(R.id.key_name_text_view)
     }
-
 }

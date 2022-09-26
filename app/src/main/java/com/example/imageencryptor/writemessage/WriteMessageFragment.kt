@@ -1,20 +1,26 @@
 package com.example.imageencryptor.writemessage
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
 import timber.log.Timber
+import java.util.jar.Manifest
+
 
 /**
  * This fragment is where the user will make their encrypted image
@@ -26,6 +32,7 @@ class WriteMessageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -47,7 +54,8 @@ class WriteMessageFragment : Fragment() {
         }
 
         //initialing listeners
-        binding.chooseImageButton.setOnClickListener{this.onClickChooseImage()}
+        binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
+        binding.makeImageButton.setOnClickListener { this.onClickMakeImage() }
 
         return binding.root
     }
@@ -56,37 +64,45 @@ class WriteMessageFragment : Fragment() {
      * Launcher to retrieve image from library
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    private var retrieveImageResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
-        if(result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data !=null){
-            val data: Uri? = result.data!!.data
-            if (data != null) {
-                viewModel.setPicture(data)
-                binding.previewImageView.setImageURI(viewModel.getPicture())
+    private var retrieveImageResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data != null) {
+                val data: Uri? = result.data!!.data
+                if (data != null) {
+                    viewModel.setPicture(data)
+                    binding.previewImageView.setImageURI(viewModel.getPicture())
+                }
             }
         }
-    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun onClickChooseImage(){
-
+    fun onClickChooseImage() {
         Timber.i("choose image buttom clicked")
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
         retrieveImageResultLauncher.launch(intent)
     }
 
+    fun onClickMakeImage() {
+
+        viewModel.encrypt(binding.inputMessageTextView.text.toString())
+        viewModel.saveImage("savedImage.png")
+
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        if(viewModel.getPicture()!=null){outState.putParcelable("output_image", viewModel.getPicture())}
+        if (viewModel.getPicture() != null) {
+            outState.putParcelable("output_image", viewModel.getPicture())
+        }
 
         Timber.i("saved instance")
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             viewModel.setPicture(savedInstanceState.get("output_image") as Uri?)
             binding.previewImageView.setImageURI(viewModel.getPicture())
             Timber.i("restored instance")
