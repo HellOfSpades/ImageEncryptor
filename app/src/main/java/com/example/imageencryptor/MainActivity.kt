@@ -10,12 +10,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        requestStoragePermission()
-    }
-
-    private fun requestStoragePermission(){
-        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-
-        }
     }
 }

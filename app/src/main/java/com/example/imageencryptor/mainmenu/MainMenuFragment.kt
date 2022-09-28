@@ -16,7 +16,7 @@ import timber.log.Timber
 
 
 /**
- * This is the start fragment from which the user navigates to all others
+ * This is the start fragment from which the user selects, or creates, a key
  */
 class MainMenuFragment : Fragment() {
 
@@ -61,15 +61,13 @@ class MainMenuFragment : Fragment() {
         Timber.i(key2.name)
         Timber.i(key3.name)
         Timber.i(key4.name)
-        Timber.i(keyList.size.toString())
+        Timber.i("total number of keys is "+keyList.size.toString())
         //END OF TEST CODE
 
         var keyRecycleViewAdapter = KeyRecycleViewAdapter();
         keyRecycleViewAdapter.data = keyList//ADDING THE TESTING KEYS
         binding.keysListRecycleView.setHasFixedSize(true)
-        Timber.i("adding adapter")
         binding.keysListRecycleView.adapter = keyRecycleViewAdapter
-        Timber.i("added adapter")
 
         // Inflate the layout for this fragment
         return binding.root

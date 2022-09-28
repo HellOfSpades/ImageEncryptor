@@ -18,5 +18,9 @@
         android:id="@+id/writeMessageFragment"
         android:name="com.example.imageencryptor.writemessage.WriteMessageFragment"
         android:label="fragment_write_message"
-        tools:layout="@layout/fragment_write_message" />
+        tools:layout="@layout/fragment_write_message" >
+        <argument
+            android:name="key"
+            app:argType="com.example.imageencryptor.encryption.Key" />
+    </fragment>
 </navigation>

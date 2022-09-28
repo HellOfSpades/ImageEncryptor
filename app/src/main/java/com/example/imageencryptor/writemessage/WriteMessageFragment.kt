@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
+import com.example.imageencryptor.encryption.Key
 import timber.log.Timber
 import java.util.jar.Manifest
 
@@ -40,6 +41,9 @@ class WriteMessageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //=======Extract the key==================
+        var args = WriteMessageFragmentArgs.fromBundle(requireArguments())
+        var key = args.key
         //=====Initializing Fragment Properties======
         //initializing the binding
         binding = FragmentWriteMessageBinding.inflate(layoutInflater)
@@ -56,6 +60,10 @@ class WriteMessageFragment : Fragment() {
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
         binding.makeImageButton.setOnClickListener { this.onClickMakeImage() }
+
+        //other initializations
+        //this is just to test the passing of keys
+        binding.symbolsLeftTextView.setText(key.name)
 
         return binding.root
     }
