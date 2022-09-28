@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
 import com.example.imageencryptor.encryption.Key
+import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import timber.log.Timber
 import java.util.jar.Manifest
 
@@ -51,6 +52,8 @@ class WriteMessageFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(WriteMessageViewModel::class.java)
         viewModel.binding = binding
         viewModel.activity = activity
+        viewModel.imageEncryptor = PPKeyImageEncryptor()
+        viewModel.imageEncryptor.setPublicKey(key.modulus, key.publicExponent)
 
         //=====restoring previous state====
         if (savedInstanceState != null) {

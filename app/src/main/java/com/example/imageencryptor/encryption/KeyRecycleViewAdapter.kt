@@ -43,6 +43,8 @@ class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewH
             textView.setText(key.name)
             encryptButton.setOnClickListener(){
                 Timber.i("Encrypt button pressed with key "+key.name)
+                //navigate to the WriteMessage Fragment
+                //pass the key that it will use for encryption
                 Navigation.findNavController(this.itemView).navigate(MainMenuFragmentDirections.actionMainMenuFragmentToWriteMessageFragment(this.key))
             }
             decryptButton.setOnClickListener(){

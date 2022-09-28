@@ -30,11 +30,6 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     var symbolCapacity: Int = 0
     private lateinit var encryptedBitmap: Bitmap
 
-    init {
-        imageEncryptor = PPKeyImageEncryptor()
-        imageEncryptor.makeKeyPair(2048)
-    }
-
 
     fun getPicture(): Uri?{
         return picture
