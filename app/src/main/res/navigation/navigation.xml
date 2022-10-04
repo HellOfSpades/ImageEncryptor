@@ -21,6 +21,6 @@
         tools:layout="@layout/fragment_write_message" >
         <argument
             android:name="key"
-            app:argType="com.example.imageencryptor.encryption.Key" />
+            app:argType="com.example.imageencryptor.keyinfo.Key" />
     </fragment>
 </navigation>

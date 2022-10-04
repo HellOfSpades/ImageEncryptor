@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentMainMenuBinding
-import com.example.imageencryptor.encryption.Key
-import com.example.imageencryptor.encryption.KeyRecycleViewAdapter
-import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
-import timber.log.Timber
+import com.example.imageencryptor.keyinfo.KeyDatabase
+import com.example.imageencryptor.keyinfo.KeyRecycleViewAdapter
+import com.example.imageencryptor.writemessage.WriteMessageViewModel
+import kotlinx.coroutines.Dispatchers
 
 
 /**
@@ -20,56 +21,39 @@ import timber.log.Timber
  */
 class MainMenuFragment : Fragment() {
 
+    private lateinit var viewModel: MainMenuViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        //inflating the binding
         val binding: FragmentMainMenuBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
+        binding.setLifecycleOwner(this)
+        //get the database
+        var keyDatabase = KeyDatabase.getInstance(this.requireContext()).keyDatabaseDao
+        //getting the application
+        val application = this.requireActivity().application
+        //create the view model factory
+        val viewModelFactory = MainMenuViewModelFactory(application, keyDatabase)
+        //get the view model
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainMenuViewModel::class.java)
 
+        //set the recycle view adapter for the keys
+        binding.keysListRecycleView.adapter = viewModel.keyRecycleViewAdapter
 
-        //TEST CODE, WILL BE REMOVED LATER
-        var imageEncryptor1 = PPKeyImageEncryptor()
-        imageEncryptor1.makeKeyPair(2048)
-        var imageEncryptor2 = PPKeyImageEncryptor()
-        imageEncryptor2.makeKeyPair(2048)
-        var imageEncryptor3 = PPKeyImageEncryptor()
-        imageEncryptor3.makeKeyPair(2048)
-        var imageEncryptor4 = PPKeyImageEncryptor()
-        imageEncryptor4.makeKeyPair(2048)
+        viewModel.keys.observe(viewLifecycleOwner, Observer {
+            it?.let{
+            viewModel.keyRecycleViewAdapter.data = viewModel.keys.value!!
+        }
+        })
 
-        var key1 = Key("key 1",
-            imageEncryptor1.getPublicKey()!!.modulus,
-            imageEncryptor1.getPublicKey()!!.publicExponent,
-            imageEncryptor1.getPrivateKey()!!.privateExponent)
-        var key2 = Key("key 2",
-            imageEncryptor2.getPublicKey()!!.modulus,
-            imageEncryptor2.getPublicKey()!!.publicExponent,
-            imageEncryptor2.getPrivateKey()!!.privateExponent)
-        var key3 = Key("key 3",
-            imageEncryptor3.getPublicKey()!!.modulus,
-            imageEncryptor3.getPublicKey()!!.publicExponent,
-            imageEncryptor3.getPrivateKey()!!.privateExponent)
-        var key4 = Key("key 4",
-            imageEncryptor4.getPublicKey()!!.modulus,
-            imageEncryptor4.getPublicKey()!!.publicExponent,
-            imageEncryptor4.getPrivateKey()!!.privateExponent)
+        //adding click listeners
+        binding.addKeyFloatingButton.setOnClickListener(){
+            viewModel.generateAndInsertNewKeyToDatabase("Vasya")
+        }
 
-        var keyList = listOf<Key>(key1, key2, key3, key4)
-
-        Timber.i(key1.name)
-        Timber.i(key2.name)
-        Timber.i(key3.name)
-        Timber.i(key4.name)
-        Timber.i("total number of keys is "+keyList.size.toString())
-        //END OF TEST CODE
-
-        var keyRecycleViewAdapter = KeyRecycleViewAdapter();
-        keyRecycleViewAdapter.data = keyList//ADDING THE TESTING KEYS
-        binding.keysListRecycleView.setHasFixedSize(true)
-        binding.keysListRecycleView.adapter = keyRecycleViewAdapter
-
-        // Inflate the layout for this fragment
+        // return the binding root
         return binding.root
     }
 

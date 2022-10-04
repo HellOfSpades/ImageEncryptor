@@ -1,7 +1,5 @@
 package com.example.imageencryptor.writemessage
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -13,15 +11,12 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
-import com.example.imageencryptor.encryption.Key
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import timber.log.Timber
-import java.util.jar.Manifest
+import java.math.BigInteger
 
 
 /**
@@ -42,6 +37,10 @@ class WriteMessageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //=====restoring previous state====
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState)
+        }
         //=======Extract the key==================
         var args = WriteMessageFragmentArgs.fromBundle(requireArguments())
         var key = args.key
@@ -53,12 +52,7 @@ class WriteMessageFragment : Fragment() {
         viewModel.binding = binding
         viewModel.activity = activity
         viewModel.imageEncryptor = PPKeyImageEncryptor()
-        viewModel.imageEncryptor.setPublicKey(key.modulus, key.publicExponent)
-
-        //=====restoring previous state====
-        if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState)
-        }
+        viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
 
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }

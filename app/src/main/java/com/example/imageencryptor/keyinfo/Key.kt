@@ -1,16 +1,24 @@
-package com.example.imageencryptor.encryption
+package com.example.imageencryptor.keyinfo
 
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.math.BigInteger
 
+@Entity(tableName = "user_keys_table")
 data class Key(
+    @ColumnInfo(name = "name")
     var name: String,
-    var modulus: BigInteger,
-    var publicExponent: BigInteger,
-    var privateExponent: BigInteger? = null
+    @ColumnInfo(name = "modulus")
+    var modulus: String,
+    @ColumnInfo(name = "public_exponent")
+    var publicExponent: String,
+    @ColumnInfo(name = "private_exponent")
+    var privateExponent: String? = null,
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0L
 ): Parcelable {
 
     override fun toString(): String {
@@ -27,22 +35,23 @@ data class Key(
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         if(dest==null)return;
+        dest.writeLong(this.id)
         dest.writeString(this.name)
         dest.writeString(modulus.toString())
         dest.writeString(publicExponent.toString())
-        if(privateExponent==null) dest.writeString(null)
-        else dest.writeString(privateExponent.toString())
+        dest.writeString(privateExponent)
     }
 
     companion object CREATOR : Parcelable.Creator<Key> {
         override fun createFromParcel(parcel: Parcel): Key {
+            var id = parcel.readLong()
             var name = parcel.readString()!!
-            var modulus = BigInteger(parcel.readString())
-            var publicExponent = BigInteger(parcel.readString())
-            var privateExponent = parcel.readString()?.let { BigInteger(it) }
+            var modulus = parcel.readString()!!
+            var publicExponent = parcel.readString()!!
+            var privateExponent = parcel.readString()
 
 
-            return Key(name, modulus, publicExponent, privateExponent)
+            return Key(name, modulus, publicExponent, privateExponent, id)
         }
 
         override fun newArray(size: Int): Array<Key?> {

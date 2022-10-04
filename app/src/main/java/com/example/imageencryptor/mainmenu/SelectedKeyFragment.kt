@@ -6,9 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.imageencryptor.databinding.FragmentSelectedKeyBinding
-import com.example.imageencryptor.encryption.Key
-import com.example.imageencryptor.encryption.KeyRecycleViewAdapter
-import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 
 
 class SelectedKeyFragment : Fragment() {
