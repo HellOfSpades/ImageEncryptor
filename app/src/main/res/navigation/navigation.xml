@@ -13,12 +13,41 @@
         <action
             android:id="@+id/action_mainMenuFragment_to_writeMessageFragment"
             app:destination="@id/writeMessageFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_addKeyFragment"
+            app:destination="@id/addKeyFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_decryptMessageFragment"
+            app:destination="@id/decryptMessageFragment" />
     </fragment>
     <fragment
         android:id="@+id/writeMessageFragment"
         android:name="com.example.imageencryptor.writemessage.WriteMessageFragment"
         android:label="fragment_write_message"
         tools:layout="@layout/fragment_write_message" >
+        <argument
+            android:name="key"
+            app:argType="com.example.imageencryptor.keyinfo.Key" />
+        <action
+            android:id="@+id/action_writeMessageFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addKeyFragment"
+        android:name="com.example.imageencryptor.keykcreation.AddKeyFragment"
+        android:label="fragment_add_key"
+        tools:layout="@layout/fragment_add_key" >
+        <action
+            android:id="@+id/action_addKeyFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/decryptMessageFragment"
+        android:name="com.example.imageencryptor.decryptmessage.DecryptMessageFragment"
+        android:label="DecryptMessageFragment" >
+        <action
+            android:id="@+id/action_decryptMessageFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
         <argument
             android:name="key"
             app:argType="com.example.imageencryptor.keyinfo.Key" />

@@ -47,6 +47,9 @@ class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewH
             }
             decryptButton.setOnClickListener(){
                 Timber.i("Decrypt button pressed with key "+key.name)
+                //navigate to the DecryptMessage fragment
+                //and pass the key to it
+                Navigation.findNavController(this.itemView).navigate(MainMenuFragmentDirections.actionMainMenuFragmentToDecryptMessageFragment(this.key))
             }
         }
 

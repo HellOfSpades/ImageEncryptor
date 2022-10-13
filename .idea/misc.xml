@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/activity_main.xml" value="0.176" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_add_key.xml" value="0.2" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_decrypt_message.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_image_select.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_main_menu.xml" value="0.1" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_select_encoding.xml" value="0.25416666666666665" />

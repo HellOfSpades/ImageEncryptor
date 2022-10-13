@@ -10,6 +10,6 @@ fun generateKey(name: String): Key{
     encryptor.makeKeyPair(2048)
     return Key(name,
         encryptor.getPublicKey()!!.modulus.toString(),
-        encryptor.getPublicKey()!!.modulus.toString(),
+        encryptor.getPublicKey()!!.publicExponent.toString(),
         encryptor.getPrivateKey()!!.privateExponent.toString())
 }

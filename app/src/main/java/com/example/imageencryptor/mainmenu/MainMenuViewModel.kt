@@ -9,16 +9,13 @@ import com.example.imageencryptor.databinding.FragmentMainMenuBinding
 import com.example.imageencryptor.keyinfo.*
 import kotlinx.coroutines.*
 
-class MainMenuViewModel(application: Application, val keyDatabase: KeyDatabaseDao) :
+class MainMenuViewModel(application: Application) :
     AndroidViewModel(application) {
 
+    //get the key database instance using the application context
+    val keyDatabase: KeyDatabaseDao = KeyDatabase.getInstance(application.applicationContext).keyDatabaseDao
+
     lateinit var binding: FragmentMainMenuBinding
-
-    //job and coroutine scope
-    private var databaseOperationJob = Job()
-    //scope of creating and processing of data gotten from it
-    private var databaseOperationScope = CoroutineScope(Dispatchers.Main+databaseOperationJob)
-
 
     //all keys in the database
     var keys = keyDatabase.getAllKeys()
@@ -26,23 +23,11 @@ class MainMenuViewModel(application: Application, val keyDatabase: KeyDatabaseDa
     //adapter for the recycle view
     var keyRecycleViewAdapter = KeyRecycleViewAdapter()
 
-    //generate a new key and insert it into the database
-    fun generateAndInsertNewKeyToDatabase( name: String){
-        databaseOperationScope.launch {
-            var generatedKey = generateKey(name)
-            insertKeyIntoDatabase(generatedKey)
-        }
-    }
-    //insert key into the database
-    private suspend fun insertKeyIntoDatabase( key: Key){
-        coroutineScope {
-            launch(Dispatchers.IO) {
-                keyDatabase.insert(key)
-            }
-        }
-    }
 
-    private suspend fun clear() {
+    /**
+     * clear the database
+     */
+    suspend fun clear() {
         withContext(Dispatchers.IO) {
             keyDatabase.clear()
         }

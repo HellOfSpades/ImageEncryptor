@@ -13,6 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import timber.log.Timber
@@ -52,11 +54,15 @@ class WriteMessageFragment : Fragment() {
         viewModel.binding = binding
         viewModel.activity = activity
         viewModel.imageEncryptor = PPKeyImageEncryptor()
-        viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
+        //viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
+        viewModel.imageEncryptor.setPublicPrivateKey(BigInteger(key.modulus), BigInteger(key.publicExponent), BigInteger(key.privateExponent))
 
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
-        binding.makeImageButton.setOnClickListener { this.onClickMakeImage() }
+        binding.makeImageButton.setOnClickListener {
+            this.onClickMakeImage()
+            Navigation.findNavController(it).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
+        }
 
         //other initializations
         //this is just to test the passing of keys
@@ -89,10 +95,7 @@ class WriteMessageFragment : Fragment() {
     }
 
     fun onClickMakeImage() {
-
-        viewModel.encrypt(binding.inputMessageTextView.text.toString())
-        viewModel.saveImage("savedImage.png")
-
+        viewModel.encrypt(binding.inputMessageTextView.text.toString(), "savedImage.png")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
