@@ -1,23 +1,24 @@
-package com.example.imageencryptor.mainmenu
+package com.example.imageencryptor.keykcreation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.imageencryptor.databinding.FragmentSelectedKeyBinding
+import com.example.imageencryptor.R
+import com.example.imageencryptor.databinding.FragmentAddExistingKeyBinding
 
 
-class SelectedKeyFragment : Fragment() {
+class AddExistingKeyFragment : Fragment() {
 
-    private lateinit var binding: FragmentSelectedKeyBinding;
+    lateinit var binding: FragmentAddExistingKeyBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentSelectedKeyBinding.inflate(inflater)
+        binding = FragmentAddExistingKeyBinding.inflate(inflater)
+
 
 
         return binding.root

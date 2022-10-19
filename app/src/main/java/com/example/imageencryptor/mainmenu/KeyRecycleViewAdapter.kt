@@ -1,17 +1,20 @@
-package com.example.imageencryptor.keyinfo
+package com.example.imageencryptor.mainmenu
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imageencryptor.R
-import com.example.imageencryptor.mainmenu.MainMenuFragmentDirections
+import com.example.imageencryptor.keyinfo.Key
 import timber.log.Timber
 
-class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewHolder>() {
+class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewHolder>() {
     var data = listOf<Key>()
     set(value) {
         field = value
@@ -19,7 +22,7 @@ class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewH
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.createViewHolder(parent, viewType)
+        return ViewHolder.createViewHolder(parent, viewType, onSelectKeyListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -30,15 +33,19 @@ class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewH
         return data.size
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View, var onSelectKeyListener: OnSelectKeyListener): RecyclerView.ViewHolder(view){
         private lateinit var key: Key;
         private val textView: TextView = view.findViewById(R.id.key_name_text_view)
         private val encryptButton: Button = view.findViewById(R.id.encrypt_button_key_list_item)
         private val decryptButton: Button = view.findViewById(R.id.decrypt_button_key_list_item)
+        private val layout: ConstraintLayout = view.findViewById(R.id.constraint_layout_key_list_item)
 
         fun bindKey(key: Key){
             this.key = key
             textView.setText(key.name)
+            layout.setOnClickListener(){
+                onSelectKeyListener.onSelectKey(key)
+            }
             encryptButton.setOnClickListener(){
                 Timber.i("Encrypt button pressed with key "+key.name)
                 //navigate to the WriteMessage Fragment
@@ -54,11 +61,10 @@ class KeyRecycleViewAdapter() : RecyclerView.Adapter<KeyRecycleViewAdapter.ViewH
         }
 
         companion object{
-            fun createViewHolder(parent: ViewGroup, viewType: Int): ViewHolder{
+            fun createViewHolder(parent: ViewGroup, viewType: Int, onSelectKeyListener: OnSelectKeyListener): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater
-                    .inflate(R.layout.key_list_item, parent, false)
-                return ViewHolder(view)
+                val view = layoutInflater.inflate(R.layout.key_list_item, parent, false)
+                return ViewHolder(view, onSelectKeyListener)
             }
         }
     }
