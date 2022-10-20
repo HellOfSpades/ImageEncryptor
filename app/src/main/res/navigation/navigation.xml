@@ -19,6 +19,15 @@
         <action
             android:id="@+id/action_mainMenuFragment_to_decryptMessageFragment"
             app:destination="@id/decryptMessageFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_keyDetailsPrivateKeyFragment"
+            app:destination="@id/keyDetailsPrivateKeyFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_keyDetailsPublicKeyFragment"
+            app:destination="@id/keyDetailsPublicKeyFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_keyDetailsPublicKeyFragment2"
+            app:destination="@id/keyDetailsPublicKeyFragment" />
     </fragment>
     <fragment
         android:id="@+id/writeMessageFragment"
@@ -48,6 +57,22 @@
         <action
             android:id="@+id/action_decryptMessageFragment_to_mainMenuFragment"
             app:destination="@id/mainMenuFragment" />
+        <argument
+            android:name="key"
+            app:argType="com.example.imageencryptor.keyinfo.Key" />
+    </fragment>
+    <fragment
+        android:id="@+id/keyDetailsPublicKeyFragment"
+        android:name="com.example.imageencryptor.keydetails.KeyDetailsPublicKeyFragment"
+        android:label="KeyDetailsPublicKeyFragment" >
+        <argument
+            android:name="key"
+            app:argType="com.example.imageencryptor.keyinfo.Key" />
+    </fragment>
+    <fragment
+        android:id="@+id/keyDetailsPrivateKeyFragment"
+        android:name="com.example.imageencryptor.keydetails.KeyDetailsPrivateKeyFragment"
+        android:label="KeyDetailsPrivateKeyFragment" >
         <argument
             android:name="key"
             app:argType="com.example.imageencryptor.keyinfo.Key" />

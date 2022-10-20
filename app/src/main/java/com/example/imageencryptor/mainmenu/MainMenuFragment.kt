@@ -1,15 +1,20 @@
 package com.example.imageencryptor.mainmenu
 
+import android.R.attr.button
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentMainMenuBinding
 import com.example.imageencryptor.keyinfo.Key
@@ -50,6 +55,22 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener{
         //adding click listeners
         binding.addKeyFloatingButton.setOnClickListener(){
             Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_addKeyFragment)
+        }
+        binding.keyDetailsButton.setOnClickListener(){
+            val popupMenu = PopupMenu(this.requireContext(), it)
+            popupMenu.getMenuInflater().inflate(R.menu.selected_key_properties, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                if(it.itemId==R.id.public_key){
+                    Navigation.findNavController(this.requireView()).navigate(
+                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPublicKeyFragment(viewModel.selectedKey))
+                }else if(it.itemId==R.id.private_key){
+                    Navigation.findNavController(this.requireView()).navigate(
+                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPrivateKeyFragment(viewModel.selectedKey))
+                }
+                true
+            }
+            popupMenu.show()
         }
 
         // return the binding root
