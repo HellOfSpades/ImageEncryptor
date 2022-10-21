@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentKeyDetailsPublicKeyBinding
 
-
+/**
+ * Fragment that displays the key information that can be shared with others
+ */
 class KeyDetailsPublicKeyFragment : Fragment() {
 
     override fun onCreateView(

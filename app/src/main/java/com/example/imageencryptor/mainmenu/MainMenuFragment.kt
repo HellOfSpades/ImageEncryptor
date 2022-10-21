@@ -21,9 +21,10 @@ import com.example.imageencryptor.keyinfo.Key
 
 
 /**
- * This is the start fragment from which the user selects, or creates, a key
+ * This is the start fragment from which the user selects his key
+ * or navigates to other operations
  */
-class MainMenuFragment : Fragment(), OnSelectKeyListener{
+class MainMenuFragment : Fragment(), OnSelectKeyListener {
 
     private lateinit var viewModel: MainMenuViewModel
     private lateinit var selectedKeyName: TextView
@@ -34,7 +35,8 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener{
         savedInstanceState: Bundle?
     ): View? {
         //inflating the binding
-        val binding: FragmentMainMenuBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
+        val binding: FragmentMainMenuBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_main_menu, container, false)
         binding.setLifecycleOwner(this)
 
         //get the information from the binding
@@ -47,26 +49,33 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener{
         binding.keysListRecycleView.adapter = keyRecycleViewAdapter
 
         viewModel.keys.observe(viewLifecycleOwner, Observer {
-            it?.let{
-            keyRecycleViewAdapter.data = viewModel.keys.value!!
-        }
+            it?.let {
+                keyRecycleViewAdapter.data = viewModel.keys.value!!
+            }
         })
 
         //adding click listeners
-        binding.addKeyFloatingButton.setOnClickListener(){
-            Navigation.findNavController(it).navigate(R.id.action_mainMenuFragment_to_addKeyFragment)
+        binding.addKeyFloatingButton.setOnClickListener() {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_mainMenuFragment_to_addKeyFragment)
         }
-        binding.keyDetailsButton.setOnClickListener(){
+        binding.keyDetailsButton.setOnClickListener() {
             val popupMenu = PopupMenu(this.requireContext(), it)
             popupMenu.getMenuInflater().inflate(R.menu.selected_key_properties, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener {
-                if(it.itemId==R.id.public_key){
+                if (it.itemId == R.id.public_key) {
                     Navigation.findNavController(this.requireView()).navigate(
-                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPublicKeyFragment(viewModel.selectedKey))
-                }else if(it.itemId==R.id.private_key){
+                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPublicKeyFragment(
+                            viewModel.selectedKey
+                        )
+                    )
+                } else if (it.itemId == R.id.private_key) {
                     Navigation.findNavController(this.requireView()).navigate(
-                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPrivateKeyFragment(viewModel.selectedKey))
+                        MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPrivateKeyFragment(
+                            viewModel.selectedKey
+                        )
+                    )
                 }
                 true
             }
@@ -77,7 +86,10 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener{
         return binding.root
     }
 
-    override fun onSelectKey(key: Key){
+    /**
+     * called when user taps one of the keys
+     */
+    override fun onSelectKey(key: Key) {
         viewModel.selectedKey = key
         selectedKeyName.text = key.name
     }

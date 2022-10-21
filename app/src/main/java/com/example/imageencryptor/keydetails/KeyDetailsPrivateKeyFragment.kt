@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentKeyDetailsPrivateKeyBinding
 
+/**
+ * Fragment used to display the full information of the key
+ */
 class KeyDetailsPrivateKeyFragment : Fragment() {
 
     override fun onCreateView(
@@ -18,9 +21,10 @@ class KeyDetailsPrivateKeyFragment : Fragment() {
         var args = KeyDetailsPrivateKeyFragmentArgs.fromBundle(requireArguments())
         var key = args.key
 
-        //inflate the lyout
+        //inflate the layout
         val binding = FragmentKeyDetailsPrivateKeyBinding.inflate(inflater)
 
+        //set text views to have the key details
         binding.keyDetailsPrivateKeyModulusTextView.text = key.modulus
         binding.keyDetailsPrivateKeyPrivateExponentTextView.text = key.privateExponent
         binding.keyDetailsPrivateKeyPublicExponentTextView.text = key.publicExponent

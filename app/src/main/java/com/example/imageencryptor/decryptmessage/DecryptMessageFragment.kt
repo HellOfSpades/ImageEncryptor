@@ -22,10 +22,14 @@ import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import timber.log.Timber
 import java.math.BigInteger
 
-
+/**
+ * The purpose of this fragment is to decrypt the message from the chosen image
+ */
 class DecryptMessageFragment : Fragment() {
 
+    //fragments binding
     lateinit var binding: FragmentDecryptMessageBinding
+    //fragments view model
     lateinit var viewModel: DecryptMessageViewModel
 
 
@@ -64,6 +68,7 @@ class DecryptMessageFragment : Fragment() {
             }else{
                 message = decrypted
             }
+            //currently the output message is toasted, but it will later be changed to something else
             Toast.makeText(this.context,  message, Toast.LENGTH_SHORT).show()
         }
 
@@ -72,9 +77,8 @@ class DecryptMessageFragment : Fragment() {
 
 
 
-    /**
-     * Launcher to retrieve image from library
-     */
+
+    //Launcher to retrieve image from library
     @RequiresApi(Build.VERSION_CODES.Q)
     private var retrieveImageResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -87,9 +91,11 @@ class DecryptMessageFragment : Fragment() {
             }
         }
 
+    /**
+     * opens the gallery for the user to pick the image they want to retrieve
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickChooseImage() {
-        Timber.i("choose image buttom clicked")
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
         retrieveImageResultLauncher.launch(intent)

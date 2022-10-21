@@ -10,6 +10,9 @@ import com.example.imageencryptor.keyinfo.generateKey
 import kotlinx.coroutines.*
 import timber.log.Timber
 
+/**
+ * view model used by the AddKeyFragment
+ */
 class AddKeyViewModel(application: Application) : AndroidViewModel(application) {
 
     //get the key database instance using the application context
@@ -29,6 +32,10 @@ class AddKeyViewModel(application: Application) : AndroidViewModel(application) 
             insertKeyIntoDatabase(generatedKey)
         }
     }
+
+    /**
+     * insert a key created from the information provided by the user
+     */
     fun constructAndInsertKeyIntoDatabase(name: String, modulus: String, publicExponent: String, privateExponent: String?){
         databaseOperationScope.launch {
             insertKeyIntoDatabase( Key(name, modulus, publicExponent, privateExponent))

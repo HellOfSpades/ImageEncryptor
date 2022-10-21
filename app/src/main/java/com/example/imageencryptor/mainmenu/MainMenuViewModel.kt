@@ -7,6 +7,9 @@ import com.example.imageencryptor.databinding.FragmentMainMenuBinding
 import com.example.imageencryptor.keyinfo.*
 import kotlinx.coroutines.*
 
+/**
+ * view model used by the MainMenuFragment
+ */
 class MainMenuViewModel(application: Application) :
     AndroidViewModel(application) {
 

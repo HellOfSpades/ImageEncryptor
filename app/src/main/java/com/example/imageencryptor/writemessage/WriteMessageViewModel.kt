@@ -19,16 +19,22 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-
+/**
+ * view model used by the WriteMessageFragment
+ */
 class WriteMessageViewModel(application: Application) : AndroidViewModel(application){
 
 
-
+    //fragment binding
     lateinit var binding: FragmentWriteMessageBinding
+    //selected pictures uri
     private var picture: Uri? = null
+    //image encryptor used to encrypt the message
     lateinit var imageEncryptor: PPKeyImageEncryptor
+    //selected pictures bitmap
     private lateinit var imageBitmap: Bitmap
     var activity: Activity? = null
+    //symbol capacity of the selected picture
     var symbolCapacity: Int = 0
     private lateinit var encryptedBitmap: Bitmap
 
@@ -40,6 +46,10 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     fun getPicture(): Uri?{
         return picture
     }
+
+    /**
+     * set the picture to be encrypted with a message
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun setPicture(data: Uri?){
         picture = data
@@ -50,6 +60,9 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    /**
+     * get bitmap from uri
+     */
     fun getBitmapFromUri(uri: Uri): Bitmap{
 
         val input: InputStream? = activity!!.contentResolver.openInputStream(uri)
@@ -60,14 +73,19 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         return bitmap
     }
 
+    /**
+     * encrypt the message into the selected image, and save the new image with the fileName
+     */
     fun encrypt(message: String, fileName: String){
         encryptOperationScope.launch {
             encryptedBitmap = imageEncryptor.encrypt(message.toByteArray(), imageBitmap)!!
-            Timber.i("encrypted: "+message)
             saveImage(fileName)
         }
     }
 
+    /**
+     * saves the image as a png with the given fileName
+     */
     suspend fun saveImage(fileName: String){
         withContext(Dispatchers.IO) {
             //declar the output stream variable outside of try/catch so that it can always be closed
@@ -83,13 +101,11 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
             var outputImageFile: File = File(directory.absolutePath, fileName)
             if (!outputImageFile.exists()) {
                 outputImageFile.createNewFile()
-                Timber.i("created new file")
             }
 
             try {
                 imageOutputStream = FileOutputStream(outputImageFile)
                 encryptedBitmap.compress(Bitmap.CompressFormat.PNG, 100, imageOutputStream)
-                Timber.i("successfully saved image to " + outputImageFile.absolutePath)
             } catch (e: IOException) {
                 e.printStackTrace()
                 Timber.i(e.toString())

@@ -12,7 +12,9 @@ import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentAddKeyBinding
 import com.example.imageencryptor.mainmenu.MainMenuViewModel
 
-
+/**
+ * Fragment responsible for users to generate, or add existing, keys
+ */
 class AddKeyFragment : Fragment() {
 
 
@@ -24,7 +26,9 @@ class AddKeyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //inflating the binding
         val binding: FragmentAddKeyBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_key, container, false)
+        //getting the view model
         val viewModel = ViewModelProvider(this).get(AddKeyViewModel::class.java)
 
         //setting on click listeners
@@ -44,7 +48,7 @@ class AddKeyFragment : Fragment() {
             )
             Navigation.findNavController(it).navigate(R.id.action_addKeyFragment_to_mainMenuFragment)
         }
-        // Inflate the layout for this fragment
+        //return the binding root
         return binding.root
     }
 }

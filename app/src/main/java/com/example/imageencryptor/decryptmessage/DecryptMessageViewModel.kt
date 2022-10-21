@@ -13,15 +13,24 @@ import com.example.imageencryptor.keyinfo.encryptor
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import java.io.InputStream
 
+/**
+ * view model used by the DecryptMessageFragment
+ */
 class DecryptMessageViewModel(application: Application) : AndroidViewModel(application) {
 
+    //selected pictures uri
     private var picture: Uri? = null
+    //selected pictures bitmap
     private lateinit var imageBitmap: Bitmap
+    //the image encryptor we use to decrypt the message
     lateinit var imageEncryptor: PPKeyImageEncryptor
     var activity: Activity? = null
 
     lateinit var key: Key
 
+    /**
+     * sets the picture that will be encrypted
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun setPicture(data: Uri?){
         picture = data
@@ -30,10 +39,16 @@ class DecryptMessageViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    /**
+     * returns the picture that is supposed to be encrypted
+     */
     fun getPicture():Uri?{
         return picture
     }
 
+    /**
+     * converts images Uri to Bitmap
+     */
     fun getBitmapFromUri(uri: Uri): Bitmap {
 
         val input: InputStream? = activity!!.contentResolver.openInputStream(uri)
@@ -44,6 +59,9 @@ class DecryptMessageViewModel(application: Application) : AndroidViewModel(appli
         return bitmap
     }
 
+    /**
+     * decrypts the set picture using the key passed in args
+     */
     fun decrypt(): String?{
         var output: String? = null
         try{

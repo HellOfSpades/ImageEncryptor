@@ -26,13 +26,10 @@ import java.math.BigInteger
  */
 class WriteMessageFragment : Fragment() {
 
+    //fragments view model
     private lateinit var viewModel: WriteMessageViewModel
+    //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
@@ -86,6 +83,10 @@ class WriteMessageFragment : Fragment() {
             }
         }
 
+    /**
+     * activates when the choose image button is pressed
+     * is opens the users gallery for him to find the image they want to encrypt
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickChooseImage() {
         Timber.i("choose image buttom clicked")
@@ -94,26 +95,32 @@ class WriteMessageFragment : Fragment() {
         retrieveImageResultLauncher.launch(intent)
     }
 
+    /**
+     * encrypts the message into the image and saves it
+     */
     fun onClickMakeImage() {
         viewModel.encrypt(binding.inputMessageTextView.text.toString(), "savedImage.png")
     }
 
+    /**
+     * saves the current state of the fragment
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         if (viewModel.getPicture() != null) {
             outState.putParcelable("output_image", viewModel.getPicture())
         }
-
-        Timber.i("saved instance")
     }
 
+    /**
+     * restores the previous state of the fragment
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
         if (savedInstanceState != null) {
             viewModel.setPicture(savedInstanceState.get("output_image") as Uri?)
             binding.previewImageView.setImageURI(viewModel.getPicture())
-            Timber.i("restored instance")
         }
     }
 }

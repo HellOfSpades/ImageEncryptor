@@ -7,6 +7,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.math.BigInteger
 
+/**
+ * class we use to store keys in the database
+ * it can also be sent as fragment args
+ * before its parameters can be used to init a PPKeyImageEncryptor, they must be converted to BigInteger
+ */
 @Entity(tableName = "user_keys_table")
 data class Key(
     @ColumnInfo(name = "name")
@@ -33,16 +38,22 @@ data class Key(
         return 0
     }
 
+    /**
+     * save key details in to the parcel to be extracted later
+     */
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         if(dest==null)return;
         dest.writeLong(this.id)
         dest.writeString(this.name)
-        dest.writeString(modulus.toString())
-        dest.writeString(publicExponent.toString())
+        dest.writeString(modulus)
+        dest.writeString(publicExponent)
         dest.writeString(privateExponent)
     }
 
     companion object CREATOR : Parcelable.Creator<Key> {
+        /**
+         * extracts and creates a key from parcel
+         */
         override fun createFromParcel(parcel: Parcel): Key {
             var id = parcel.readLong()
             var name = parcel.readString()!!
