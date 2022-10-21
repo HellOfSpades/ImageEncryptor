@@ -55,7 +55,7 @@ class WriteMessageFragment : Fragment() {
         viewModel.activity = activity
         viewModel.imageEncryptor = PPKeyImageEncryptor()
         //viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
-        viewModel.imageEncryptor.setPublicPrivateKey(BigInteger(key.modulus), BigInteger(key.publicExponent), BigInteger(key.privateExponent))
+        viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
 
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }

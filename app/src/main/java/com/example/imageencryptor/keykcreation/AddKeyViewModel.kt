@@ -8,6 +8,7 @@ import com.example.imageencryptor.keyinfo.KeyDatabase
 import com.example.imageencryptor.keyinfo.KeyDatabaseDao
 import com.example.imageencryptor.keyinfo.generateKey
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 class AddKeyViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -26,6 +27,11 @@ class AddKeyViewModel(application: Application) : AndroidViewModel(application) 
         databaseOperationScope.launch {
             var generatedKey = generateKey(name)
             insertKeyIntoDatabase(generatedKey)
+        }
+    }
+    fun constructAndInsertKeyIntoDatabase(name: String, modulus: String, publicExponent: String, privateExponent: String?){
+        databaseOperationScope.launch {
+            insertKeyIntoDatabase( Key(name, modulus, publicExponent, privateExponent))
         }
     }
 
