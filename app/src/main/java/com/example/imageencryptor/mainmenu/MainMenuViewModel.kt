@@ -19,14 +19,30 @@ class MainMenuViewModel(application: Application) :
     //all keys in the database
     var keys = keyDatabase.getAllKeys()
 
+    //job and coroutine scope
+    private var databaseOperationJob = Job()
+    //scope of creating and processing of data gotten from it
+    private var databaseOperationScope = CoroutineScope(Dispatchers.Main+databaseOperationJob)
+
     lateinit var selectedKey: Key
 
     /**
-     * clear the database
+     * when clicking the delete button
      */
-    suspend fun clear() {
-        withContext(Dispatchers.IO) {
-            keyDatabase.clear()
+    fun onClickDeleteKeyButton(){
+        if(selectedKey!=null){
+            databaseOperationScope.launch {
+                removeKey(selectedKey)
+            }
+        }
+    }
+
+    /**
+     * remove key from database
+     */
+    suspend fun removeKey(key: Key){
+        Dispatchers.IO {
+            keyDatabase.deleteKey(key.id)
         }
     }
 }

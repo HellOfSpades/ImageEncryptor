@@ -81,6 +81,9 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
             }
             popupMenu.show()
         }
+        binding.mainMenuDelleteKeyButton.setOnClickListener {
+            viewModel.onClickDeleteKeyButton()
+        }
 
         // return the binding root
         return binding.root
