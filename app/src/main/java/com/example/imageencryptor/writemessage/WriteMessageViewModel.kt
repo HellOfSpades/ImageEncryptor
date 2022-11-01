@@ -56,7 +56,6 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         if(picture!=null) {
             imageBitmap = getBitmapFromUri(picture!!)
             symbolCapacity = imageEncryptor.getSymbolCapacity(imageBitmap)
-            binding.symbolsLeftTextView.text = symbolCapacity.toString()
         }
     }
 

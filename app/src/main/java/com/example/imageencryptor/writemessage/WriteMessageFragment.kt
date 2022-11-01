@@ -28,6 +28,7 @@ class WriteMessageFragment : Fragment() {
 
     //fragments view model
     private lateinit var viewModel: WriteMessageViewModel
+
     //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
 
@@ -52,18 +53,21 @@ class WriteMessageFragment : Fragment() {
         viewModel.activity = activity
         viewModel.imageEncryptor = PPKeyImageEncryptor()
         //viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
-        viewModel.imageEncryptor.setPublicKey(BigInteger(key.modulus), BigInteger(key.publicExponent))
+        viewModel.imageEncryptor.setPublicKey(
+            BigInteger(key.modulus),
+            BigInteger(key.publicExponent)
+        )
 
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
         binding.makeImageButton.setOnClickListener {
             this.onClickMakeImage()
-            Navigation.findNavController(it).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
+            Navigation.findNavController(it)
+                .navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
         }
 
         //other initializations
-        //this is just to test the passing of keys
-        binding.symbolsLeftTextView.setText(key.name)
+        binding.keyUsedTextView.text = getString(R.string.key_used)+" "+key.name
 
         return binding.root
     }
@@ -79,6 +83,7 @@ class WriteMessageFragment : Fragment() {
                 if (data != null) {
                     viewModel.setPicture(data)
                     binding.previewImageView.setImageURI(viewModel.getPicture())
+                    binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+viewModel.symbolCapacity.toString()
                 }
             }
         }
@@ -118,9 +123,13 @@ class WriteMessageFragment : Fragment() {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
-        if (savedInstanceState != null) {
-            viewModel.setPicture(savedInstanceState.get("output_image") as Uri?)
-            binding.previewImageView.setImageURI(viewModel.getPicture())
-        }
+
+        //TODO fix this
+//        var image = savedInstanceState.get("output_image") as Uri?
+//        if (image != null) {
+//            viewModel.setPicture(image)
+//            binding.previewImageView.setImageURI(viewModel.getPicture())
+//        }
+
     }
 }
