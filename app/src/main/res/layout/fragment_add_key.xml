@@ -6,13 +6,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:background="@color/primaryColor"
         >
 
         <Button
             android:id="@+id/generate_new_key_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:text="GenerateNew"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +23,7 @@
             android:id="@+id/use_existing_key_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:text="Use Existing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,50 +33,58 @@
             android:id="@+id/added_key_name_edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
             android:hint="key name"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:backgroundTint="@color/secondaryColor"
+            />
 
         <EditText
             android:id="@+id/edit_text_private_exponent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
             android:hint="(optional)private exponent"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_text_public_exponent" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_text_public_exponent"
+            app:backgroundTint="@color/secondaryColor"
+            />
 
         <EditText
             android:id="@+id/edit_text_public_exponent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
             android:hint="public exponent"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_text_modulus" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_text_modulus"
+            app:backgroundTint="@color/secondaryColor"
+            />
 
         <EditText
             android:id="@+id/edit_text_modulus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/spacing_normal"
             android:ems="10"
             android:hint="modulus"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/generate_new_key_button" />
+            app:layout_constraintTop_toBottomOf="@+id/generate_new_key_button"
+            app:backgroundTint="@color/secondaryColor"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout
         >
 </layout>

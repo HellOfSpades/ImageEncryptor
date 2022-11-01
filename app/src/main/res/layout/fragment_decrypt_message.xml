@@ -6,16 +6,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:background="@color/primaryColor"
         >
 
         <ImageView
             android:id="@+id/decrypted_image_preview"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:src="@android:drawable/ic_menu_gallery"
             app:layout_constraintBottom_toTopOf="@+id/choose_image_button_decrypt_message_view"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,8 +27,8 @@
             android:id="@+id/choose_image_button_decrypt_message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:text="Choose Image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/decrypt_button_decrypt_message_view"
@@ -37,8 +38,8 @@
             android:id="@+id/decrypt_button_decrypt_message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:text="Decrypt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

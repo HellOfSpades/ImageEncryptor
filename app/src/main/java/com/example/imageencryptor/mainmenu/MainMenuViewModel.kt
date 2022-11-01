@@ -1,9 +1,7 @@
 package com.example.imageencryptor.mainmenu
 
 import android.app.Application
-import android.widget.TextView
 import androidx.lifecycle.AndroidViewModel
-import com.example.imageencryptor.databinding.FragmentMainMenuBinding
 import com.example.imageencryptor.keyinfo.*
 import kotlinx.coroutines.*
 
@@ -24,7 +22,7 @@ class MainMenuViewModel(application: Application) :
     //scope of creating and processing of data gotten from it
     private var databaseOperationScope = CoroutineScope(Dispatchers.Main+databaseOperationJob)
 
-    lateinit var selectedKey: Key
+    var selectedKey: Key? = null
 
     /**
      * when clicking the delete button
@@ -32,7 +30,7 @@ class MainMenuViewModel(application: Application) :
     fun onClickDeleteKeyButton(){
         if(selectedKey!=null){
             databaseOperationScope.launch {
-                removeKey(selectedKey)
+                removeKey(selectedKey!!)
             }
         }
     }

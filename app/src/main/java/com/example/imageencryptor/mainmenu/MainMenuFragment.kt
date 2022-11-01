@@ -28,6 +28,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
 
     private lateinit var viewModel: MainMenuViewModel
     private lateinit var selectedKeyName: TextView
+    private var onDeselectKeyListeners = ArrayList<OnDeselectKeyListener>()
 
 
     override fun onCreateView(
@@ -63,17 +64,23 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
             val popupMenu = PopupMenu(this.requireContext(), it)
             popupMenu.getMenuInflater().inflate(R.menu.selected_key_properties, popupMenu.menu)
 
+            if (viewModel.selectedKey!!.privateExponent == null) {
+                popupMenu.menu.findItem(R.id.private_key).setEnabled(false)
+            }
+
             popupMenu.setOnMenuItemClickListener {
+
+
                 if (it.itemId == R.id.public_key) {
                     Navigation.findNavController(this.requireView()).navigate(
                         MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPublicKeyFragment(
-                            viewModel.selectedKey
+                            viewModel.selectedKey!!
                         )
                     )
                 } else if (it.itemId == R.id.private_key) {
                     Navigation.findNavController(this.requireView()).navigate(
                         MainMenuFragmentDirections.actionMainMenuFragmentToKeyDetailsPrivateKeyFragment(
-                            viewModel.selectedKey
+                            viewModel.selectedKey!!
                         )
                     )
                 }
@@ -93,7 +100,25 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
      * called when user taps one of the keys
      */
     override fun onSelectKey(key: Key) {
+        //notify that the previous key was deselected
+
+        onDeselectKeyListeners.forEach() {
+            it.onDeselectKey(viewModel.selectedKey)
+        }
+
+        //change the selected key
         viewModel.selectedKey = key
         selectedKeyName.text = key.name
+        //change the color of the text view so its no longer a warning text
+        selectedKeyName.setTextColor(resources.getColor(R.color.primaryTextColor))
     }
+
+    /**
+     * add a new listener for when a key is deselected
+     */
+    override fun addOnDeselectKeyListener(onDeselectKeyListener: OnDeselectKeyListener) {
+        onDeselectKeyListeners.add(onDeselectKeyListener)
+    }
+
+
 }
