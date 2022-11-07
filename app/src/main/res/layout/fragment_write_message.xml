@@ -93,28 +93,22 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView6"
+                            android:id="@+id/write_message_file_name_text_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="file name: sample file" />
+                            android:text="@string/file_name" />
 
                         <TextView
-                            android:id="@+id/textView5"
+                            android:id="@+id/write_message_file_size_text_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="file type: tiff" />
+                            android:text="@string/file_size" />
 
                         <TextView
-                            android:id="@+id/textView4"
+                            android:id="@+id/write_message_file_total_symbols_text_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="file size: x mb" />
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="total symbols: x" />
+                            android:text="@string/total_symbols" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -173,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_marginEnd="@dimen/spacing_normal"
-                android:text="Key Used: x"
+                android:text="Key Used:"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/choose_image_button"

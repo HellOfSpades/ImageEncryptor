@@ -32,7 +32,7 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     //image encryptor used to encrypt the message
     lateinit var imageEncryptor: PPKeyImageEncryptor
     //selected pictures bitmap
-    private lateinit var imageBitmap: Bitmap
+    private var imageBitmap: Bitmap? = null
     var activity: Activity? = null
     //symbol capacity of the selected picture
     var symbolCapacity: Int = 0
@@ -55,7 +55,7 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         picture = data
         if(picture!=null) {
             imageBitmap = getBitmapFromUri(picture!!)
-            symbolCapacity = imageEncryptor.getSymbolCapacity(imageBitmap)
+            symbolCapacity = imageEncryptor.getSymbolCapacity(imageBitmap!!)
         }
     }
 
@@ -74,12 +74,17 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
 
     /**
      * encrypt the message into the selected image, and save the new image with the fileName
+     * return whether or not the message was successfully encrypted into the image
      */
-    fun encrypt(message: String, fileName: String){
+    fun encrypt(message: String, fileName: String): String?{
+        if(imageBitmap==null){
+            return "Please select an image"
+        }
         encryptOperationScope.launch {
-            encryptedBitmap = imageEncryptor.encrypt(message.toByteArray(), imageBitmap)!!
+            encryptedBitmap = imageEncryptor.encrypt(message.toByteArray(), imageBitmap!!)!!
             saveImage(fileName)
         }
+        return null
     }
 
     /**

@@ -1,16 +1,23 @@
 package com.example.imageencryptor.writemessage
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -62,9 +69,19 @@ class WriteMessageFragment : Fragment() {
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
         binding.makeImageButton.setOnClickListener {
             this.onClickMakeImage()
-            Navigation.findNavController(it)
-                .navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
         }
+        binding.inputMessageTextView.addTextChangedListener(object: TextWatcher {
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-s.length)
+            }
+        })
 
         //other initializations
         binding.keyUsedTextView.text = getString(R.string.key_used)+" "+key.name
@@ -73,7 +90,7 @@ class WriteMessageFragment : Fragment() {
     }
 
     /**
-     * Launcher to retrieve image from library
+     * Launcher to retrieve image from library, and update the necessary views
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     private var retrieveImageResultLauncher =
@@ -81,9 +98,27 @@ class WriteMessageFragment : Fragment() {
             if (result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data != null) {
                 val data: Uri? = result.data!!.data
                 if (data != null) {
+                    //how many decimal places to show
+                    val decimalPlaces = 2.0
+
+                    //setting the picture in the view model
                     viewModel.setPicture(data)
+                    //updating the text views to match the selected image
                     binding.previewImageView.setImageURI(viewModel.getPicture())
-                    binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+viewModel.symbolCapacity.toString()
+                    //creating uri cursor
+                    val cursor = requireActivity().contentResolver.query(viewModel.getPicture()!!, null, null, null, null)!!
+                    cursor.moveToFirst()
+                    //cursor indexes
+                    val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    //setting the text Views
+                    binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
+                    //there are 1048576 bytes in a mega byte
+                    binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
+                            (Math.round(cursor.getDouble(sizeColumnIndex)/1048576*Math.pow(10.0,decimalPlaces))/Math.pow(10.0,decimalPlaces))+
+                            getString(R.string.mb)
+                    binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
+                    binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
                 }
             }
         }
@@ -94,7 +129,7 @@ class WriteMessageFragment : Fragment() {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickChooseImage() {
-        Timber.i("choose image buttom clicked")
+        Timber.i("choose image bottom clicked")
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
         retrieveImageResultLauncher.launch(intent)
@@ -104,7 +139,12 @@ class WriteMessageFragment : Fragment() {
      * encrypts the message into the image and saves it
      */
     fun onClickMakeImage() {
-        viewModel.encrypt(binding.inputMessageTextView.text.toString(), "savedImage.png")
+        var message = viewModel.encrypt(binding.inputMessageTextView.text.toString(), "savedImage.png")
+
+        if(message!=null){
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+        else Navigation.findNavController(binding.makeImageButton).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
     }
 
     /**

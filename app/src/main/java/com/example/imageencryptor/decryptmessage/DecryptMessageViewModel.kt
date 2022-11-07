@@ -11,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.imageencryptor.keyinfo.Key
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import java.io.InputStream
+import java.lang.Exception
 
 /**
  * view model used by the DecryptMessageFragment
@@ -20,7 +21,7 @@ class DecryptMessageViewModel(application: Application) : AndroidViewModel(appli
     //selected pictures uri
     private var picture: Uri? = null
     //selected pictures bitmap
-    private lateinit var imageBitmap: Bitmap
+    private var imageBitmap: Bitmap? = null
     //the image encryptor we use to decrypt the message
     lateinit var imageEncryptor: PPKeyImageEncryptor
     var activity: Activity? = null
@@ -62,11 +63,13 @@ class DecryptMessageViewModel(application: Application) : AndroidViewModel(appli
      * decrypts the set picture using the key passed in args
      */
     fun decrypt(): String?{
-        var output: String? = null
-        try{
-            output = String(imageEncryptor.decrypt(imageBitmap)!!)
-        }catch (e: UnsupportedOperationException){
+        if(imageBitmap==null)return "Please select an image"
 
+        var output: String?
+        try{
+            output = String(imageEncryptor.decrypt(imageBitmap!!)!!)
+        }catch (e: Exception){
+            output = null
         }
         return output
     }

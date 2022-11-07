@@ -3,4 +3,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="symbols_left">Symbols left:</string>
     <string name="key_used">Key Used:</string>
+    <string name="file_name">file name:</string>
+    <string name="file_type">file type:</string>
+    <string name="file_size">file size:</string>
+    <string name="total_symbols">total symbols:</string>
+    <string name="mb">mb</string>
 </resources>
