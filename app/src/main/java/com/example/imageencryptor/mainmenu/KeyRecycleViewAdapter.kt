@@ -1,5 +1,6 @@
 package com.example.imageencryptor.mainmenu
 
+import android.app.Application
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -88,6 +89,7 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
                 //disable the button
                 decryptButton.isEnabled = false
                 decryptButton.isClickable = false
+                decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.disabledTextColor))
             }
 
         }
@@ -109,8 +111,7 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
          * if the view holder currently holds this key, it will change its color so its no longer selected
          */
         override fun onDeselectKey(key: Key?) {
-            Timber.i("deselected")
-            if(this.key==key){
+            if(this.key!=key){
                 markDeselected()
             }
         }

@@ -61,6 +61,13 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
                 .navigate(R.id.action_mainMenuFragment_to_addKeyFragment)
         }
         binding.keyDetailsButton.setOnClickListener() {
+            it->
+            //don't show the menu if the key is not selected
+            if(viewModel.selectedKey==null){
+                Toast.makeText(this.context, "please select a key first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val popupMenu = PopupMenu(this.requireContext(), it)
             popupMenu.getMenuInflater().inflate(R.menu.selected_key_properties, popupMenu.menu)
 
@@ -100,15 +107,13 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
      * called when user taps one of the keys
      */
     override fun onSelectKey(key: Key) {
-        //notify that the previous key was deselected
-
-        onDeselectKeyListeners.forEach() {
-            it.onDeselectKey(viewModel.selectedKey)
-        }
-
         //change the selected key
         viewModel.selectedKey = key
         selectedKeyName.text = key.name
+        //notify that the previous key was deselected
+        onDeselectKeyListeners.forEach() {
+            it.onDeselectKey(viewModel.selectedKey)
+        }
         //change the color of the text view so its no longer a warning text
         selectedKeyName.setTextColor(resources.getColor(R.color.primaryTextColor))
     }

@@ -29,7 +29,9 @@
         android:text="Decrypt"
         app:layout_constraintBottom_toBottomOf="@+id/encrypt_button_key_list_item"
         app:layout_constraintEnd_toStartOf="@+id/encrypt_button_key_list_item"
-        app:layout_constraintTop_toTopOf="@+id/encrypt_button_key_list_item" />
+        app:layout_constraintTop_toTopOf="@+id/encrypt_button_key_list_item"
+
+        />
 
     <Button
         android:id="@+id/encrypt_button_key_list_item"

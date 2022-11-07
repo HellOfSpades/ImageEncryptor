@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -33,10 +34,27 @@ class AddKeyFragment : Fragment() {
 
         //setting on click listeners
         binding.generateNewKeyButton.setOnClickListener(){
+            //check that the required field is not blank
+            if(binding.addedKeyNameEditText.text.toString()==""){
+                Toast.makeText(requireContext(), "Please provide a name for the key", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             viewModel.generateAndInsertNewKeyToDatabase(binding.addedKeyNameEditText.text.toString())
             Navigation.findNavController(it).navigate(R.id.action_addKeyFragment_to_mainMenuFragment)
         }
         binding.useExistingKeyButton.setOnClickListener(){
+
+            //check that the required fields is not blank
+            if(binding.addedKeyNameEditText.text.toString().equals("")){
+                Toast.makeText(requireContext(), "Please provide a name for the key", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if(binding.editTextModulus.text.toString().equals("") || binding.editTextPublicExponent.text.toString().equals("")){
+                Toast.makeText(requireContext(), "Please provide a modulus and a public key", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             var privateExp: String? = binding.editTextPrivateExponent.text.toString()
             if(privateExp.equals(""))privateExp = null;
 
