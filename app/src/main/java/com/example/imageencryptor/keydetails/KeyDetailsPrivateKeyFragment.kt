@@ -51,7 +51,7 @@ class KeyDetailsPrivateKeyFragment : Fragment() {
         val clipboard: ClipboardManager? =
             getSystemService(requireContext(), ClipboardManager::class.java)
         if(clipboard!=null) {
-            val clip = ClipData.newPlainText("user public key", text)
+            val clip = ClipData.newPlainText("", text)
             clipboard.setPrimaryClip(clip)
             Toast.makeText(requireContext(), "copied to clipboard", Toast.LENGTH_SHORT).show()
         }
