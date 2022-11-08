@@ -1,8 +1,6 @@
 package com.example.imageencryptor.writemessage
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,7 +15,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -139,10 +136,13 @@ class WriteMessageFragment : Fragment() {
      * encrypts the message into the image and saves it
      */
     fun onClickMakeImage() {
-        var message = viewModel.encrypt(binding.inputMessageTextView.text.toString(), "savedImage.png")
 
-        if(message!=null){
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        var usersMessage = binding.inputMessageTextView.text.toString()
+
+        var exceptionMessageToUser = viewModel.encrypt(usersMessage, "savedImage.png")
+
+        if(exceptionMessageToUser!=null){
+            Toast.makeText(context, exceptionMessageToUser, Toast.LENGTH_SHORT).show()
         }
         else Navigation.findNavController(binding.makeImageButton).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
     }

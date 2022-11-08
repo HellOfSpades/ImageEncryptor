@@ -80,6 +80,10 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         if(imageBitmap==null){
             return "Please select an image"
         }
+        if(message.length>symbolCapacity){
+            return "Your message is too big"
+        }
+
         encryptOperationScope.launch {
             encryptedBitmap = imageEncryptor.encrypt(message.toByteArray(), imageBitmap!!)!!
             saveImage(fileName)
