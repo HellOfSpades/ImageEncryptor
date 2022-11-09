@@ -47,10 +47,6 @@ class WriteMessageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //=====restoring previous state====
-        if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState)
-        }
         //=======Extract the key==================
         var args = WriteMessageFragmentArgs.fromBundle(requireArguments())
         var key = args.key
@@ -89,6 +85,11 @@ class WriteMessageFragment : Fragment() {
         //other initializations
         binding.keyUsedTextView.text = getString(R.string.key_used)+" "+key.name
 
+        //=====restoring previous state====
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState)
+        }
+
         return binding.root
     }
 
@@ -100,29 +101,7 @@ class WriteMessageFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data != null) {
                 val data: Uri? = result.data!!.data
-                if (data != null) {
-                    //how many decimal places to show
-                    val decimalPlaces = 2.0
-
-                    //setting the picture in the view model
-                    viewModel.setPicture(data)
-                    //updating the text views to match the selected image
-                    binding.previewImageView.setImageURI(viewModel.getPicture())
-                    //creating uri cursor
-                    val cursor = requireActivity().contentResolver.query(viewModel.getPicture()!!, null, null, null, null)!!
-                    cursor.moveToFirst()
-                    //cursor indexes
-                    val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                    //setting the text Views
-                    binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
-                    //there are 1048576 bytes in a mega byte
-                    binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
-                            (Math.round(cursor.getDouble(sizeColumnIndex)/1048576*Math.pow(10.0,decimalPlaces))/Math.pow(10.0,decimalPlaces))+
-                            getString(R.string.mb)
-                    binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
-                    binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
-                }
+                setPicture(data)
             }
         }
 
@@ -181,10 +160,8 @@ class WriteMessageFragment : Fragment() {
      */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        if (viewModel.getPicture() != null) {
-            outState.putParcelable("output_image", viewModel.getPicture())
-        }
+        outState.putParcelable("output_image", viewModel.getPicture())
+        outState.putString("incomplete_user_message", binding.inputMessageTextView.text.toString())
     }
 
     /**
@@ -192,13 +169,40 @@ class WriteMessageFragment : Fragment() {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
+        setPicture(savedInstanceState.get("output_image") as Uri?)
+        var incompleteUserMessage = savedInstanceState.getString("incomplete_user_message")
+        if(incompleteUserMessage!=null){
+            binding.inputMessageTextView.setText(incompleteUserMessage)
+        }
+    }
 
-        //TODO fix this
-//        var image = savedInstanceState.get("output_image") as Uri?
-//        if (image != null) {
-//            viewModel.setPicture(image)
-//            binding.previewImageView.setImageURI(viewModel.getPicture())
-//        }
+    /**
+     * set picture to be changed as well as all the visuals to display image information to the user
+     */
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun setPicture(data: Uri?){
+        if (data != null) {
+            //how many decimal places to show
+            val decimalPlaces = 2.0
 
+            //setting the picture in the view model
+            viewModel.setPicture(data)
+            //updating the text views to match the selected image
+            binding.previewImageView.setImageURI(viewModel.getPicture())
+            //creating uri cursor
+            val cursor = requireActivity().contentResolver.query(viewModel.getPicture()!!, null, null, null, null)!!
+            cursor.moveToFirst()
+            //cursor indexes
+            val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+            //setting the text Views
+            binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
+            //there are 1048576 bytes in a mega byte
+            binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
+                    (Math.round(cursor.getDouble(sizeColumnIndex)/1048576*Math.pow(10.0,decimalPlaces))/Math.pow(10.0,decimalPlaces))+
+                    getString(R.string.mb)
+            binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
+            binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
+        }
     }
 }
