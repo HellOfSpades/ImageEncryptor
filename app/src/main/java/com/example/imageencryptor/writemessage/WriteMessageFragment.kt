@@ -1,6 +1,8 @@
 package com.example.imageencryptor.writemessage
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -35,6 +38,9 @@ class WriteMessageFragment : Fragment() {
 
     //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
+
+    //permission request codes
+    private val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
@@ -137,6 +143,14 @@ class WriteMessageFragment : Fragment() {
      */
     fun onClickMakeImage() {
 
+        //check if the user gave permission to write to external storage
+        if(!hasWriteExternalStoragePermission()){
+            Timber.i("permission denied")
+            Toast.makeText(context, "can't save image to your phone without permission", Toast.LENGTH_SHORT).show()
+            requestWriteExternalStoragePermission()
+            return
+        }
+
         var usersMessage = binding.inputMessageTextView.text.toString()
 
         var exceptionMessageToUser = viewModel.encrypt(usersMessage, "savedImage.png")
@@ -145,6 +159,21 @@ class WriteMessageFragment : Fragment() {
             Toast.makeText(context, exceptionMessageToUser, Toast.LENGTH_SHORT).show()
         }
         else Navigation.findNavController(binding.makeImageButton).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
+    }
+
+    /**
+     * check if the app has permission to write to external storage
+     */
+    fun hasWriteExternalStoragePermission(): Boolean{
+        //check if the permission was already given before
+        return ActivityCompat.checkSelfPermission(requireContext().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     * request to give the WRITE_EXTERNAL_STORAGE permission
+     */
+    fun requestWriteExternalStoragePermission(){
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
     }
 
     /**
