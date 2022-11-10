@@ -39,10 +39,6 @@ class WriteMessageFragment : Fragment() {
     //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
 
-    //permission request codes
-    private val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 0
-
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,7 +92,6 @@ class WriteMessageFragment : Fragment() {
     /**
      * Launcher to retrieve image from library, and update the necessary views
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     private var retrieveImageResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data != null) {
@@ -109,7 +104,6 @@ class WriteMessageFragment : Fragment() {
      * activates when the choose image button is pressed
      * is opens the users gallery for him to find the image they want to encrypt
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickChooseImage() {
         Timber.i("choose image bottom clicked")
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -123,10 +117,10 @@ class WriteMessageFragment : Fragment() {
     fun onClickMakeImage() {
 
         //check if the user gave permission to write to external storage
-        if(!hasWriteExternalStoragePermission()){
+        if(!(viewModel.hasWriteExternalStoragePermission() || viewModel.min29Sdk())){
             Timber.i("permission denied")
             Toast.makeText(context, "can't save image to your phone without permission", Toast.LENGTH_SHORT).show()
-            requestWriteExternalStoragePermission()
+            viewModel.requestWriteExternalStoragePermission()
             return
         }
 
@@ -141,21 +135,6 @@ class WriteMessageFragment : Fragment() {
     }
 
     /**
-     * check if the app has permission to write to external storage
-     */
-    fun hasWriteExternalStoragePermission(): Boolean{
-        //check if the permission was already given before
-        return ActivityCompat.checkSelfPermission(requireContext().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED
-    }
-
-    /**
-     * request to give the WRITE_EXTERNAL_STORAGE permission
-     */
-    fun requestWriteExternalStoragePermission(){
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
-    }
-
-    /**
      * saves the current state of the fragment
      */
     override fun onSaveInstanceState(outState: Bundle) {
@@ -167,7 +146,6 @@ class WriteMessageFragment : Fragment() {
     /**
      * restores the previous state of the fragment
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
         setPicture(savedInstanceState.get("output_image") as Uri?)
         var incompleteUserMessage = savedInstanceState.getString("incomplete_user_message")
@@ -179,7 +157,6 @@ class WriteMessageFragment : Fragment() {
     /**
      * set picture to be changed as well as all the visuals to display image information to the user
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun setPicture(data: Uri?){
         if (data != null) {
             //how many decimal places to show

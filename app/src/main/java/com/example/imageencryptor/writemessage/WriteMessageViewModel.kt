@@ -1,14 +1,19 @@
 package com.example.imageencryptor.writemessage
 
+import android.Manifest
 import android.app.Activity
 import android.app.Application
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.widget.Toast
+import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import com.example.imageencryptor.databinding.FragmentWriteMessageBinding
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
@@ -43,6 +48,9 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     //encryption scope
     private var encryptOperationScope = CoroutineScope(Dispatchers.Main+encryptOperationJob)
 
+    //permission request codes
+    private val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 0
+
     fun getPicture(): Uri?{
         return picture
     }
@@ -50,13 +58,19 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     /**
      * set the picture to be encrypted with a message
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun setPicture(data: Uri?){
         picture = data
         if(picture!=null) {
             imageBitmap = getBitmapFromUri(picture!!)
             symbolCapacity = imageEncryptor.getSymbolCapacity(imageBitmap!!)
         }
+    }
+
+    /**
+     * returns whether or not the sdk version of the device is 29 or higher
+     */
+    fun min29Sdk(): Boolean{
+        return Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q
     }
 
     /**
@@ -96,33 +110,85 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
      */
     suspend fun saveImage(fileName: String){
         withContext(Dispatchers.IO) {
-            //declar the output stream variable outside of try/catch so that it can always be closed
-            var imageOutputStream: FileOutputStream? = null
-            //open, or create the directory where the image will be stored
-            var directory = File(
-                Environment.getExternalStorageDirectory().toString() + "/ImageEncryptorOutput/"
-            )
-            if (!directory.exists()) {
-                directory.mkdir()
-            }
-            //create the file
-            var outputImageFile: File = File(directory.absolutePath, fileName)
-            if (!outputImageFile.exists()) {
-                outputImageFile.createNewFile()
-            }
-
-            try {
-                imageOutputStream = FileOutputStream(outputImageFile)
-                encryptedBitmap.compress(Bitmap.CompressFormat.PNG, 100, imageOutputStream)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Timber.i(e.toString())
-            } finally {
-                if (imageOutputStream != null) {
-                    imageOutputStream.flush()
-                    imageOutputStream.close()
-                }
+            if(min29Sdk()){
+                saveImageSdk29(fileName)
+            }else{
+                saveImageSdk28(fileName)
             }
         }
+    }
+
+    /**
+     * save image with this method if the sdk is 29 or higher
+     */
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveImageSdk29(fileName: String){
+        val imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$fileName.png")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.WIDTH, encryptedBitmap.width)
+            put(MediaStore.Images.Media.HEIGHT, encryptedBitmap.height)
+        }
+
+        try{
+            val contentResolver = getApplication<Application>().contentResolver
+
+            contentResolver.insert(imageCollection, contentValues)?.also {uri->
+                contentResolver.openOutputStream(uri).use {outputStream ->
+                    encryptedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                }
+            }
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * save image with this method if the sdk is 28 or lower
+     */
+    private fun saveImageSdk28(fileName: String){
+        //declar the output stream variable outside of try/catch so that it can always be closed
+        var imageOutputStream: FileOutputStream? = null
+        //open, or create the directory where the image will be stored
+        var directory = File(
+            Environment.getExternalStorageDirectory().toString() + "/ImageEncryptorOutput/"
+        )
+        if (!directory.exists()) {
+            directory.mkdir()
+        }
+        //create the file
+        var outputImageFile: File = File(directory.absolutePath, fileName)
+        if (!outputImageFile.exists()) {
+            outputImageFile.createNewFile()
+        }
+
+        try {
+            imageOutputStream = FileOutputStream(outputImageFile)
+            encryptedBitmap.compress(Bitmap.CompressFormat.PNG, 100, imageOutputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Timber.i(e.toString())
+        } finally {
+            if (imageOutputStream != null) {
+                imageOutputStream.flush()
+                imageOutputStream.close()
+            }
+        }
+    }
+
+    /**
+     * check if the app has permission to write to external storage
+     */
+    fun hasWriteExternalStoragePermission(): Boolean{
+        //check if the permission was already given before
+        return ActivityCompat.checkSelfPermission(getApplication<Application>().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     * request to give the WRITE_EXTERNAL_STORAGE permission
+     */
+    fun requestWriteExternalStoragePermission(){
+        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
     }
 }
