@@ -39,18 +39,10 @@ class WriteMessageFragment : Fragment() {
     //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
 
-    //permission request codes
-    private val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 0
-
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //=====restoring previous state====
-        if (savedInstanceState != null) {
-            restoreInstanceState(savedInstanceState)
-        }
         //=======Extract the key==================
         var args = WriteMessageFragmentArgs.fromBundle(requireArguments())
         var key = args.key
@@ -89,40 +81,22 @@ class WriteMessageFragment : Fragment() {
         //other initializations
         binding.keyUsedTextView.text = getString(R.string.key_used)+" "+key.name
 
+        //=====restoring previous state====
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState)
+        }
+
         return binding.root
     }
 
     /**
      * Launcher to retrieve image from library, and update the necessary views
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     private var retrieveImageResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK && result.data?.data != null) {
                 val data: Uri? = result.data!!.data
-                if (data != null) {
-                    //how many decimal places to show
-                    val decimalPlaces = 2.0
-
-                    //setting the picture in the view model
-                    viewModel.setPicture(data)
-                    //updating the text views to match the selected image
-                    binding.previewImageView.setImageURI(viewModel.getPicture())
-                    //creating uri cursor
-                    val cursor = requireActivity().contentResolver.query(viewModel.getPicture()!!, null, null, null, null)!!
-                    cursor.moveToFirst()
-                    //cursor indexes
-                    val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
-                    //setting the text Views
-                    binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
-                    //there are 1048576 bytes in a mega byte
-                    binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
-                            (Math.round(cursor.getDouble(sizeColumnIndex)/1048576*Math.pow(10.0,decimalPlaces))/Math.pow(10.0,decimalPlaces))+
-                            getString(R.string.mb)
-                    binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
-                    binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
-                }
+                setPicture(data)
             }
         }
 
@@ -130,7 +104,6 @@ class WriteMessageFragment : Fragment() {
      * activates when the choose image button is pressed
      * is opens the users gallery for him to find the image they want to encrypt
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickChooseImage() {
         Timber.i("choose image bottom clicked")
         var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -144,10 +117,10 @@ class WriteMessageFragment : Fragment() {
     fun onClickMakeImage() {
 
         //check if the user gave permission to write to external storage
-        if(!hasWriteExternalStoragePermission()){
+        if(!(viewModel.hasWriteExternalStoragePermission() || viewModel.min29Sdk())){
             Timber.i("permission denied")
             Toast.makeText(context, "can't save image to your phone without permission", Toast.LENGTH_SHORT).show()
-            requestWriteExternalStoragePermission()
+            viewModel.requestWriteExternalStoragePermission()
             return
         }
 
@@ -162,43 +135,51 @@ class WriteMessageFragment : Fragment() {
     }
 
     /**
-     * check if the app has permission to write to external storage
-     */
-    fun hasWriteExternalStoragePermission(): Boolean{
-        //check if the permission was already given before
-        return ActivityCompat.checkSelfPermission(requireContext().applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED
-    }
-
-    /**
-     * request to give the WRITE_EXTERNAL_STORAGE permission
-     */
-    fun requestWriteExternalStoragePermission(){
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
-    }
-
-    /**
      * saves the current state of the fragment
      */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        if (viewModel.getPicture() != null) {
-            outState.putParcelable("output_image", viewModel.getPicture())
-        }
+        outState.putParcelable("output_image", viewModel.getPicture())
+        outState.putString("incomplete_user_message", binding.inputMessageTextView.text.toString())
     }
 
     /**
      * restores the previous state of the fragment
      */
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun restoreInstanceState(savedInstanceState: Bundle) {
+        setPicture(savedInstanceState.get("output_image") as Uri?)
+        var incompleteUserMessage = savedInstanceState.getString("incomplete_user_message")
+        if(incompleteUserMessage!=null){
+            binding.inputMessageTextView.setText(incompleteUserMessage)
+        }
+    }
 
-        //TODO fix this
-//        var image = savedInstanceState.get("output_image") as Uri?
-//        if (image != null) {
-//            viewModel.setPicture(image)
-//            binding.previewImageView.setImageURI(viewModel.getPicture())
-//        }
+    /**
+     * set picture to be changed as well as all the visuals to display image information to the user
+     */
+    fun setPicture(data: Uri?){
+        if (data != null) {
+            //how many decimal places to show
+            val decimalPlaces = 2.0
 
+            //setting the picture in the view model
+            viewModel.setPicture(data)
+            //updating the text views to match the selected image
+            binding.previewImageView.setImageURI(viewModel.getPicture())
+            //creating uri cursor
+            val cursor = requireActivity().contentResolver.query(viewModel.getPicture()!!, null, null, null, null)!!
+            cursor.moveToFirst()
+            //cursor indexes
+            val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+            //setting the text Views
+            binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
+            //there are 1048576 bytes in a mega byte
+            binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
+                    (Math.round(cursor.getDouble(sizeColumnIndex)/1048576*Math.pow(10.0,decimalPlaces))/Math.pow(10.0,decimalPlaces))+
+                    getString(R.string.mb)
+            binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
+            binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
+        }
     }
 }
