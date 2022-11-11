@@ -18,6 +18,7 @@ import com.example.imageencryptor.MainActivity
 import com.example.imageencryptor.R
 import com.example.imageencryptor.databinding.FragmentMainMenuBinding
 import com.example.imageencryptor.keyinfo.Key
+import timber.log.Timber
 
 
 /**
@@ -61,7 +62,6 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
                 .navigate(R.id.action_mainMenuFragment_to_addKeyFragment)
         }
         binding.keyDetailsButton.setOnClickListener() {
-            it->
             //don't show the menu if the key is not selected
             if(viewModel.selectedKey==null){
                 Toast.makeText(this.context, "please select a key first", Toast.LENGTH_SHORT).show()
@@ -99,8 +99,15 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
             viewModel.onClickDeleteKeyButton()
         }
 
+        val bindingRoot = binding.root
+
+        //=====restoring previous state====
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState)
+        }
+
         // return the binding root
-        return binding.root
+        return bindingRoot
     }
 
     /**
@@ -125,5 +132,24 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         onDeselectKeyListeners.add(onDeselectKeyListener)
     }
 
+    /**
+     * saves the current state of the fragment
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Timber.i("on save instance state was called")
+        outState.putParcelable("selected_key", viewModel.selectedKey)
+    }
+
+    /**
+     * restores the previous state of the fragment
+     */
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        val selectedKey = savedInstanceState.get("selected_key") as Key?
+        if(selectedKey!=null){
+
+            onSelectKey(selectedKey)
+        }
+    }
 
 }

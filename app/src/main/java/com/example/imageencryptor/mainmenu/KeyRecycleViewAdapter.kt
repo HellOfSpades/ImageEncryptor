@@ -71,7 +71,6 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
 
             layout.setOnClickListener(){
                 onSelectKeyListener.onSelectKey(key)
-                markSelected()
             }
             encryptButton.setOnClickListener(){
                 //navigate to the WriteMessageFragment
@@ -111,7 +110,9 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
          * if the view holder currently holds this key, it will change its color so its no longer selected
          */
         override fun onDeselectKey(key: Key?) {
-            if(this.key!=key){
+            if(this.key==key){
+                markSelected()
+            }else{
                 markDeselected()
             }
         }
