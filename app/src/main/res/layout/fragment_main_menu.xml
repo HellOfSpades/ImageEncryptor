@@ -53,9 +53,6 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/spacing_normal"
                     android:text="Please Select A key"
-
-                    android:textSize="24sp"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/main_menu_dellete_key_button"
                     app:layout_constraintStart_toStartOf="parent"

@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
+import com.example.imageencryptorlibrary.encryption.CantDecryptImageException
 import com.secrepixel.app.keyinfo.Key
 import java.io.InputStream
 import java.lang.Exception
@@ -68,7 +69,7 @@ class DecryptMessageViewModel(application: Application) : AndroidViewModel(appli
         var output: String?
         try{
             output = String(imageEncryptor.decrypt(imageBitmap!!)!!)
-        }catch (e: Exception){
+        }catch (e: CantDecryptImageException){
             output = null
         }
         return output

@@ -2,10 +2,7 @@ package com.secrepixel.app.keykcreation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.secrepixel.app.keyinfo.Key
-import com.secrepixel.app.keyinfo.KeyDatabase
-import com.secrepixel.app.keyinfo.KeyDatabaseDao
-import com.secrepixel.app.keyinfo.generateKey
+import com.secrepixel.app.keyinfo.*
 import kotlinx.coroutines.*
 
 /**
@@ -35,8 +32,9 @@ class AddKeyViewModel(application: Application) : AndroidViewModel(application) 
      * insert a key created from the information provided by the user
      */
     fun constructAndInsertKeyIntoDatabase(name: String, modulus: String, publicExponent: String, privateExponent: String?){
+        val key = constructKey(name, modulus, publicExponent, privateExponent)
         databaseOperationScope.launch {
-            insertKeyIntoDatabase( Key(name, modulus, publicExponent, privateExponent))
+            insertKeyIntoDatabase( key)
         }
     }
 

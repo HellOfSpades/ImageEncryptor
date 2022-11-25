@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.secrepixel.app.R
 import com.secrepixel.app.databinding.FragmentAddKeyBinding
+import java.lang.NumberFormatException
+import java.security.spec.InvalidKeySpecException
 
 /**
  * Fragment responsible for users to generate, or add existing, keys
@@ -57,13 +59,20 @@ class AddKeyFragment : Fragment() {
             var privateExp: String? = binding.editTextPrivateExponent.text.toString()
             if(privateExp.equals(""))privateExp = null;
 
-            viewModel.constructAndInsertKeyIntoDatabase(
-                binding.addedKeyNameEditText.text.toString(),
-                binding.editTextModulus.text.toString(),
-                binding.editTextPublicExponent.text.toString(),
-                privateExp
-            )
-            Navigation.findNavController(it).navigate(R.id.action_addKeyFragment_to_mainMenuFragment)
+            try {
+                viewModel.constructAndInsertKeyIntoDatabase(
+                    binding.addedKeyNameEditText.text.toString(),
+                    binding.editTextModulus.text.toString(),
+                    binding.editTextPublicExponent.text.toString(),
+                    privateExp
+                )
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_addKeyFragment_to_mainMenuFragment)
+            }catch (e: InvalidKeySpecException){
+                Toast.makeText(requireContext(), "Incorrect key specs", Toast.LENGTH_SHORT).show()
+            }catch (e: NumberFormatException){
+                Toast.makeText(requireContext(), "Modulus and keys should only contain numbers", Toast.LENGTH_SHORT).show()
+            }
         }
         //return the binding root
         return binding.root

@@ -5,4 +5,6 @@
     <dimen name="spacing_big">24dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_huge">40dp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="text_size_big">24</dimen>
 </resources>
