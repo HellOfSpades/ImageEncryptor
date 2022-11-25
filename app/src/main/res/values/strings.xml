@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ImageEncryptor</string>
+    <string name="app_name">Secrepixel</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="symbols_left">Symbols left:</string>
     <string name="key_used">Key Used:</string>
