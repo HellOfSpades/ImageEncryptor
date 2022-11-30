@@ -121,7 +121,7 @@ class WriteMessageFragment : Fragment() {
 
         var usersMessage = binding.inputMessageTextView.text.toString()
 
-        var exceptionMessageToUser = viewModel.encrypt(usersMessage, "savedImage.png")
+        var exceptionMessageToUser = viewModel.encrypt(usersMessage, getFileName())
 
         if(exceptionMessageToUser!=null){
             Toast.makeText(context, exceptionMessageToUser, Toast.LENGTH_SHORT).show()
@@ -176,5 +176,12 @@ class WriteMessageFragment : Fragment() {
             binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
             binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
         }
+    }
+
+    /**
+     * returns the filename to be used for saving the image
+     */
+    private fun getFileName(): String {
+        return viewModel.getIncrementedFileName()
     }
 }
