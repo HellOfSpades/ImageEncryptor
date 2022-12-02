@@ -1,6 +1,7 @@
 package com.secrepixel.app.writemessage
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -168,6 +170,7 @@ class WriteMessageFragment : Fragment() {
             val nameColumnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             val sizeColumnIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
             //setting the text Views
+            binding.fragmentImageSelectTextViewSelectImage.setTextColor(Color.TRANSPARENT)
             binding.writeMessageFileNameTextView.text = getString(R.string.file_name)+" "+cursor.getString(nameColumnIndex)
             //there are 1048576 bytes in a mega byte
             binding.writeMessageFileSizeTextView.text = getString(R.string.file_size)+" "+
