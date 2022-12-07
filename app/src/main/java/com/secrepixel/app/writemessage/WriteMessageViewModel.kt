@@ -124,7 +124,7 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     private fun saveImageSdk29(fileName: String){
         val imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "$fileName.png")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$fileName")
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
             put(MediaStore.Images.Media.WIDTH, encryptedBitmap.width)
             put(MediaStore.Images.Media.HEIGHT, encryptedBitmap.height)
@@ -149,15 +149,8 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     private fun saveImageSdk28(fileName: String){
         //declar the output stream variable outside of try/catch so that it can always be closed
         var imageOutputStream: FileOutputStream? = null
-        //open, or create the directory where the image will be stored
-        var directory = File(
-            Environment.getExternalStorageDirectory().toString() + "/ImageEncryptorOutput/"
-        )
-        if (!directory.exists()) {
-            directory.mkdir()
-        }
-        //create the file
-        var outputImageFile: File = File(directory.absolutePath, fileName)
+
+        var outputImageFile = getFile(fileName)
         if (!outputImageFile.exists()) {
             outputImageFile.createNewFile()
         }
@@ -189,5 +182,37 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
      */
     fun requestWriteExternalStoragePermission(){
         ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
+    }
+
+    /**
+     * returns the next filename that has not be used already
+     */
+    fun getIncrementedFileName(): String{
+        var fileName = "savedImage_"
+        var increment = 0
+        var file = getFile(fileName+increment.toString()+".png")
+        while(file.exists()){
+            increment++
+            file = getFile((fileName+increment.toString()+".png"))
+        }
+        val outputFileName = fileName+increment.toString()+".png"
+        Timber.i("chosen name: "+outputFileName)
+        return outputFileName
+    }
+
+    /**
+     * returns file from fileName
+     */
+    fun getFile(fileName: String): File{
+        //open, or create the directory where the image will be stored
+        var directory = File(
+            Environment.getExternalStorageDirectory().toString() + "/SecrepixelOutput/"
+        )
+        if (!directory.exists()) {
+            directory.mkdir()
+        }
+        //create the file
+        var file: File = File(directory.absolutePath, fileName)
+        return file
     }
 }
