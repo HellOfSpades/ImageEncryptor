@@ -206,7 +206,7 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
     fun getFile(fileName: String): File{
         //open, or create the directory where the image will be stored
         var directory = File(
-            Environment.getExternalStorageDirectory().toString() + "/AppNameOutput/"
+            Environment.getExternalStorageDirectory().toString() + "/SecrepixelOutput/"
         )
         if (!directory.exists()) {
             directory.mkdir()
