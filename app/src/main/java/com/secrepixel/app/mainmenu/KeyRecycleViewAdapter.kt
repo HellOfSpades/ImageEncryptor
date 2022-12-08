@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.secrepixel.app.R
 import com.secrepixel.app.keyinfo.Key
+import timber.log.Timber
 
 /**
  * adapter for the main menu key recycle view
@@ -75,6 +76,9 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
             }
             //check if the key has a private exponent
             if(key.privateExponent!=null){
+                decryptButton.isEnabled = true
+                decryptButton.isClickable = true
+                decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.primaryTextColor))
                 decryptButton.setOnClickListener(){
                     //navigate to the DecryptMessageFragment
                     //and pass the key to it
@@ -86,7 +90,6 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
                 decryptButton.isClickable = false
                 decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.disabledTextColor))
             }
-
         }
 
         companion object{
