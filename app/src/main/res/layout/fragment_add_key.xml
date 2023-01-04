@@ -54,7 +54,7 @@
                 android:text="Use Existing"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_private_exponent" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_key" />
 
             <EditText
                 android:id="@+id/added_key_name_edit_text"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:ems="10"
-                android:hint="key name"
+                android:hint="key name*"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
                 app:backgroundTint="@color/secondaryColor"
@@ -71,38 +71,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/edit_text_private_exponent"
+                android:id="@+id/edit_text_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:ems="10"
-                android:hint="(optional)private exponent"
-                android:inputType="textPersonName"
-                app:backgroundTint="@color/secondaryColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_public_exponent" />
-
-            <EditText
-                android:id="@+id/edit_text_public_exponent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:ems="10"
-                android:hint="public exponent"
-                android:inputType="textPersonName"
-                app:backgroundTint="@color/secondaryColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_modulus" />
-
-            <EditText
-                android:id="@+id/edit_text_modulus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:ems="10"
-                android:hint="modulus"
+                android:hint="key"
                 android:inputType="textPersonName"
                 app:backgroundTint="@color/secondaryColor"
                 app:layout_constraintEnd_toEndOf="parent"

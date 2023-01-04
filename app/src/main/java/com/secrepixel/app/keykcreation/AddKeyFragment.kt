@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.secrepixel.app.R
 import com.secrepixel.app.databinding.FragmentAddKeyBinding
+import timber.log.Timber
 import java.lang.NumberFormatException
 import java.security.spec.InvalidKeySpecException
 
@@ -33,7 +34,7 @@ class AddKeyFragment : Fragment() {
         //getting the view model
         val viewModel = ViewModelProvider(this).get(AddKeyViewModel::class.java)
 
-        //setting on click listeners
+//        //setting on click listeners
         binding.generateNewKeyButton.setOnClickListener(){
             //check that the required field is not blank
             if(binding.addedKeyNameEditText.text.toString()==""){
@@ -51,21 +52,35 @@ class AddKeyFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please provide a name for the key", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if(binding.editTextModulus.text.toString().equals("") || binding.editTextPublicExponent.text.toString().equals("")){
+            if(binding.editTextKey.text.toString().equals("")){
                 Toast.makeText(requireContext(), "Please provide a modulus and a public key", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            var privateExp: String? = binding.editTextPrivateExponent.text.toString()
-            if(privateExp.equals(""))privateExp = null;
-
             try {
-                viewModel.constructAndInsertKeyIntoDatabase(
-                    binding.addedKeyNameEditText.text.toString(),
-                    binding.editTextModulus.text.toString(),
-                    binding.editTextPublicExponent.text.toString(),
-                    privateExp
-                )
+
+                var keyProperties = binding.editTextKey.text.toString().split(":")
+
+                for(s in keyProperties){
+                    Timber.i(s)
+                }
+
+                if(keyProperties.size==2){
+                    viewModel.constructAndInsertKeyIntoDatabase(
+                        binding.addedKeyNameEditText.text.toString(),
+                        keyProperties[0],
+                        keyProperties[1],
+                        null
+                    )
+                }else{
+                    viewModel.constructAndInsertKeyIntoDatabase(
+                        binding.addedKeyNameEditText.text.toString(),
+                        keyProperties[0],
+                        keyProperties[1],
+                        keyProperties[2]
+                    )
+                }
+
                 Navigation.findNavController(it)
                     .navigate(R.id.action_addKeyFragment_to_mainMenuFragment)
             }catch (e: InvalidKeySpecException){

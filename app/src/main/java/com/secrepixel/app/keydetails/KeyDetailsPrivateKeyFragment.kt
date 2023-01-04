@@ -30,16 +30,8 @@ class KeyDetailsPrivateKeyFragment : Fragment() {
         val binding = FragmentKeyDetailsPrivateKeyBinding.inflate(inflater)
 
         //set text views to have the key details
-        binding.keyDetailsPrivateKeyModulusTextView.text = key.modulus
-        binding.keyDetailsPrivateKeyModulusTextView.setOnClickListener(){
-            setTextToClipboard((it as TextView).text)
-        }
-        binding.keyDetailsPrivateKeyPrivateExponentTextView.text = key.privateExponent
-        binding.keyDetailsPrivateKeyPrivateExponentTextView.setOnClickListener(){
-            setTextToClipboard((it as TextView).text)
-        }
-        binding.keyDetailsPrivateKeyPublicExponentTextView.text = key.publicExponent
-        binding.keyDetailsPrivateKeyPublicExponentTextView.setOnClickListener(){
+        binding.keyDetailsPrivateKey.text = key.modulus+":"+key.publicExponent+":"+key.privateExponent
+        binding.keyDetailsPrivateKey.setOnClickListener(){
             setTextToClipboard((it as TextView).text)
         }
 
