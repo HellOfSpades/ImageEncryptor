@@ -86,7 +86,7 @@
             android:id="@+id/action_successfullyCreatedImageFragment_to_mainMenuFragment"
             app:destination="@id/mainMenuFragment" />
         <argument
-            android:name="fileName"
-            app:argType="string" />
+            android:name="uri"
+            app:argType="android.net.Uri" />
     </fragment>
 </navigation>

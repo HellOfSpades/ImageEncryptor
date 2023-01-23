@@ -26,14 +26,14 @@ class SuccessfullyCreatedImageFragment : Fragment() {
     ): View? {
         //get the arguments
         var args = SuccessfullyCreatedImageFragmentArgs.fromBundle(requireArguments())
-        var imageFileName = args.fileName
+        var uri = args.uri
         //inflate the binding
         var binding = FragmentSuccessfullyCreatedImageBinding.inflate(inflater)
         //get the view model
         viewModel = ViewModelProvider(this).get(SuccessfullyCreatedImageViewModel::class.java)
-        viewModel.setImage(imageFileName, requireContext())
+        viewModel.setImage(uri)
         //set preview picture
-        binding.displayImage.setImageURI(viewModel.getImageUri())
+        binding.displayImage.setImageURI(uri)
         //add listeners
         binding.goBackToMainMenuButton.setOnClickListener(){
             //navigate to the main menu

@@ -51,12 +51,13 @@ fun getBitmapFromUri(activity: Activity, uri: Uri): Bitmap {
 /**
  * saves the image as a png with the given fileName
  */
-suspend fun saveImage(application: ImageEncryptorApplication, fileName: String, bitmap: Bitmap) {
-    withContext(Dispatchers.IO) {
+suspend fun saveImage(application: ImageEncryptorApplication, fileName: String, bitmap: Bitmap, context: Context) : Uri{
+    return withContext(Dispatchers.IO) {
         if (min29Sdk()) {
-            saveImageSdk29(application, fileName, bitmap)
+            return@withContext saveImageSdk29(application, fileName, bitmap)
         } else {
             saveImageSdk28(fileName, bitmap)
+            return@withContext getUri(fileName, context)
         }
     }
 }
@@ -65,7 +66,7 @@ suspend fun saveImage(application: ImageEncryptorApplication, fileName: String, 
  * save image with this method if the sdk is 29 or higher
  */
 @RequiresApi(Build.VERSION_CODES.Q)
-private fun saveImageSdk29(application: ImageEncryptorApplication, fileName: String, bitmap: Bitmap) {
+private fun saveImageSdk29(application: ImageEncryptorApplication, fileName: String, bitmap: Bitmap) : Uri{
     val imageCollection =
         MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
     val contentValues = ContentValues().apply {
@@ -78,20 +79,22 @@ private fun saveImageSdk29(application: ImageEncryptorApplication, fileName: Str
     try {
         val contentResolver = application.contentResolver
 
-        contentResolver.insert(imageCollection, contentValues)?.also { uri ->
+        val uri = contentResolver.insert(imageCollection, contentValues)?.also { uri ->
             contentResolver.openOutputStream(uri).use { outputStream ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             }
         }
+        return uri!!
     } catch (e: IOException) {
         e.printStackTrace()
+        return Uri.EMPTY
     }
 }
 
 /**
  * save image with this method if the sdk is 28 or lower
  */
-private fun saveImageSdk28(fileName: String, bitmap: Bitmap) {
+private fun saveImageSdk28(fileName: String, bitmap: Bitmap){
     //declare the output stream variable outside of try/catch so that it can always be closed
     var imageOutputStream: FileOutputStream? = null
 
@@ -140,16 +143,21 @@ fun requestWriteExternalStoragePermission(activity: Activity) {
  * returns the next filename that has not be used already
  */
 fun getIncrementedFileName(): String {
-    var fileName = "savedImage_"
-    var increment = 0
-    var file = getFile(fileName + increment.toString() + ".png")
-    while (file.exists()) {
-        increment++
-        file = getFile((fileName + increment.toString() + ".png"))
+    if(min29Sdk()){
+
+        return ""
+    }else {
+        var fileName = "savedImage_"
+        var increment = 0
+        var file = getFile(fileName + increment.toString() + ".png")
+        while (file.exists()) {
+            increment++
+            file = getFile((fileName + increment.toString() + ".png"))
+        }
+        val outputFileName = fileName + increment.toString() + ".png"
+        Timber.i("chosen name: " + outputFileName)
+        return outputFileName
     }
-    val outputFileName = fileName + increment.toString() + ".png"
-    Timber.i("chosen name: " + outputFileName)
-    return outputFileName
 }
 
 /**

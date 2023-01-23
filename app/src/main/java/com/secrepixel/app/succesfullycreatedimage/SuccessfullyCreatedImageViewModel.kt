@@ -16,14 +16,14 @@ class SuccessfullyCreatedImageViewModel(application: Application) : AndroidViewM
         return imageUri
     }
 
-    fun setImage(fileName: String, context: Context){
-        imageUri = getUri(fileName, context)
+    fun setImage(uri: Uri){
+        imageUri = uri
     }
 
 
     fun getShareImageIntent(): Intent {
         var intent = Intent(Intent.ACTION_SEND)
-        intent.setType("image/png")
+        intent.setType("*/*")
         intent.putExtra(Intent.EXTRA_STREAM, imageUri)
         return intent
     }
