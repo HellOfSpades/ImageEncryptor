@@ -38,8 +38,8 @@
             android:name="key"
             app:argType="com.secrepixel.app.keyinfo.Key" />
         <action
-            android:id="@+id/action_writeMessageFragment_to_mainMenuFragment"
-            app:destination="@id/mainMenuFragment" />
+            android:id="@+id/action_writeMessageFragment_to_successfullyCreatedImageFragment"
+            app:destination="@id/successfullyCreatedImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/addKeyFragment"
@@ -76,5 +76,17 @@
         <argument
             android:name="key"
             app:argType="com.secrepixel.app.keyinfo.Key" />
+    </fragment>
+    <fragment
+        android:id="@+id/successfullyCreatedImageFragment"
+        android:name="com.secrepixel.app.succesfullycreatedimage.SuccessfullyCreatedImageFragment"
+        android:label="fragment_successfully_created_image"
+        tools:layout="@layout/fragment_successfully_created_image" >
+        <action
+            android:id="@+id/action_successfullyCreatedImageFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
+        <argument
+            android:name="fileName"
+            app:argType="string" />
     </fragment>
 </navigation>

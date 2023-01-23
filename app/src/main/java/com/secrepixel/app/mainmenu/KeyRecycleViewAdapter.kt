@@ -78,7 +78,7 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
             if(key.privateExponent!=null){
                 decryptButton.isEnabled = true
                 decryptButton.isClickable = true
-                decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.primaryTextColor))
+                //decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.primaryColor))
                 decryptButton.setOnClickListener(){
                     //navigate to the DecryptMessageFragment
                     //and pass the key to it
@@ -88,7 +88,7 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
                 //disable the button
                 decryptButton.isEnabled = false
                 decryptButton.isClickable = false
-                decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.disabledTextColor))
+                //decryptButton.setTextColor(ContextCompat.getColor(decryptButton.context, R.color.disabledTextColor))
             }
         }
 
@@ -117,7 +117,7 @@ class KeyRecycleViewAdapter(var onSelectKeyListener: OnSelectKeyListener) : Recy
         }
 
         private fun markSelected(){
-            layout.setBackgroundColor(ContextCompat.getColor(layout.context.applicationContext, R.color.secondaryColor))
+            layout.setBackgroundColor(ContextCompat.getColor(layout.context.applicationContext, R.color.secondaryLightColor))
             textView.setTextColor(ContextCompat.getColor(layout.context.applicationContext, R.color.secondaryTextColor))
         }
         private fun markDeselected(){

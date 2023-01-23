@@ -5,7 +5,15 @@
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
         <item name="android:textSize">@dimen/text_size_normal</item>
-        <item name="android:textColor">@color/primaryTextColor</item>
-        <item name="android:colorButtonNormal">@color/primaryLightColor</item>
+        <item name="android:textColor">@color/secondaryColor</item>
+
+    </style>
+
+    <style name="PrimaryButtonStyle" parent="Base.Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/secondaryColor</item>
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:background">@drawable/rounded_corner</item>
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingRight">25dp</item>
     </style>
 </resources>

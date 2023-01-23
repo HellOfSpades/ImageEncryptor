@@ -30,15 +30,10 @@ class KeyDetailsPublicKeyFragment : Fragment() {
         var binding = FragmentKeyDetailsPublicKeyBinding.inflate(inflater)
 
         //set text views to have the key details
-        binding.keyDetailsPublicKeyModulusTextView.text = key.modulus
-        binding.keyDetailsPublicKeyModulusTextView.setOnClickListener(){
+        binding.keyDetailsPublicKey.text = key.modulus+":"+key.publicExponent
+        binding.keyDetailsPublicKey.setOnClickListener(){
             setTextToClipboard((it as TextView).text)
         }
-        binding.keyDetailsPublicKeyPublicExponentTextView.text = key.publicExponent
-        binding.keyDetailsPublicKeyPublicExponentTextView.setOnClickListener(){
-            setTextToClipboard((it as TextView).text)
-        }
-
         return binding.root
     }
 

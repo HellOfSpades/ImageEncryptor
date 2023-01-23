@@ -6,7 +6,8 @@
   <color name="secondaryColor">#124559</color>
   <color name="secondaryLightColor">#447086</color>
   <color name="secondaryDarkColor">#001e30</color>
-  <color name="primaryTextColor">#000000</color>
-  <color name="secondaryTextColor">#ffffff</color>
-  <color name="disabledTextColor">#b5b5b5</color>
+  <color name="primaryTextColor">#124559</color>
+  <color name="secondaryTextColor">#eff6e0</color>
+  <color name="disabledTextColor">#ffffff</color>
+  <color name="oldDisabledTextColor">#b5b5b5</color>
 </resources>

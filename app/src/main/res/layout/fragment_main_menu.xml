@@ -65,10 +65,12 @@
                     android:layout_marginTop="@dimen/spacing_normal"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/spacing_normal"
+                    android:backgroundTint="#00FFFFFF"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_dialog_dialer" />
+                    app:srcCompat="@android:drawable/ic_menu_more"
+                    app:tint="@color/secondaryDarkColor" />
 
                 <ImageView
                     android:id="@+id/main_menu_dellete_key_button"
@@ -80,7 +82,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/key_details_button"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_delete" />
+                    app:srcCompat="@android:drawable/ic_delete"
+                    app:tint="@color/secondaryColor" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton

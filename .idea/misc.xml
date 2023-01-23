@@ -5,9 +5,10 @@
       <map>
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.226" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/drawable/ic_launcher_background.xml" value="0.226" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/drawable/rounded_corner.xml" value="0.167" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_add_existing_key.xml" value="0.13229166666666667" />
-        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_add_key.xml" value="0.176" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_add_key.xml" value="0.264" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_decrypt_message.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_image_select.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_key_details_private_key.xml" value="0.264" />
@@ -16,7 +17,8 @@
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_select_encoding.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_select_key.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_selected_key.xml" value="0.152" />
-        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_write_message.xml" value="0.4742468415937804" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_successfully_created_image.xml" value="0.176" />
+        <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/fragment_write_message.xml" value="0.2" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/key_list_item.xml" value="0.264" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/layout/text_item_view.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/burbo/AndroidStudioProjects/ImageEncryptor/app/src/main/res/menu/selected_key_properties.xml" value="0.264" />
