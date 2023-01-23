@@ -37,16 +37,18 @@
 
 
             <Button
+                style="@style/PrimaryButtonStyle"
                 android:id="@+id/generate_new_key_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:text="GenerateNew"
+                android:text="Generate New"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/added_key_name_edit_text" />
 
             <Button
+                style="@style/PrimaryButtonStyle"
                 android:id="@+id/use_existing_key_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

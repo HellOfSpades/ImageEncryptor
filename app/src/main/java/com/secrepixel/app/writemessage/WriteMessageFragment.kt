@@ -1,5 +1,6 @@
 package com.secrepixel.app.writemessage
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -18,9 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.secrepixel.app.R
 import com.secrepixel.app.databinding.FragmentWriteMessageBinding
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
+import com.secrepixel.app.*
 import timber.log.Timber
 import java.math.BigInteger
 
@@ -48,6 +49,7 @@ class WriteMessageFragment : Fragment() {
         binding = FragmentWriteMessageBinding.inflate(layoutInflater)
         //initializing the view model
         viewModel = ViewModelProvider(this).get(WriteMessageViewModel::class.java)
+        viewModel.fragment = this
         viewModel.binding = binding
         viewModel.activity = activity
         viewModel.imageEncryptor = PPKeyImageEncryptor()
@@ -113,22 +115,15 @@ class WriteMessageFragment : Fragment() {
      */
     fun onClickMakeImage() {
 
-        //check if the user gave permission to write to external storage
-        if(!(viewModel.hasWriteExternalStoragePermission() || viewModel.min29Sdk())){
-            Timber.i("permission denied")
-            Toast.makeText(context, "can't save image to your phone without permission", Toast.LENGTH_SHORT).show()
-            viewModel.requestWriteExternalStoragePermission()
-            return
-        }
-
         var usersMessage = binding.inputMessageTextView.text.toString()
-
-        var exceptionMessageToUser = viewModel.encrypt(usersMessage, getFileName())
-
-        if(exceptionMessageToUser!=null){
-            Toast.makeText(context, exceptionMessageToUser, Toast.LENGTH_SHORT).show()
+        val progress = ProgressDialog.show(requireContext(), "Please Wait",
+            "encrypting image", true);
+        try {
+            var fileName = viewModel.encrypt(usersMessage, progress)
+        }catch (e: java.lang.RuntimeException){
+            progress.dismiss()
+            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
         }
-        else Navigation.findNavController(binding.makeImageButton).navigate(R.id.action_writeMessageFragment_to_mainMenuFragment)
     }
 
     /**
@@ -179,12 +174,5 @@ class WriteMessageFragment : Fragment() {
             binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
             binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
         }
-    }
-
-    /**
-     * returns the filename to be used for saving the image
-     */
-    private fun getFileName(): String {
-        return viewModel.getIncrementedFileName()
     }
 }

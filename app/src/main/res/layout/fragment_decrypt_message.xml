@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
+            style="@style/PrimaryButtonStyle"
             android:id="@+id/choose_image_button_decrypt_message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,6 +36,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
+            style="@style/PrimaryButtonStyle"
             android:id="@+id/decrypt_button_decrypt_message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
