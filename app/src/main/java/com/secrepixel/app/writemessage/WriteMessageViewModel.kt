@@ -93,10 +93,10 @@ class WriteMessageViewModel(application: Application) : AndroidViewModel(applica
         }
         encryptOperationScope.launch {
             encryptedBitmap = imageEncryptor.encrypt(message.toByteArray(), imageBitmap!!)!!
-            saveImage(getApplication(),fileName, encryptedBitmap)
+            val uri = saveImage(getApplication(),fileName, encryptedBitmap, activity!!.applicationContext)
             progress.dismiss()
             Navigation.findNavController(binding.makeImageButton)
-                .navigate(WriteMessageFragmentDirections.actionWriteMessageFragmentToSuccessfullyCreatedImageFragment(fileName))
+                .navigate(WriteMessageFragmentDirections.actionWriteMessageFragmentToSuccessfullyCreatedImageFragment(uri))
 
         }
 
