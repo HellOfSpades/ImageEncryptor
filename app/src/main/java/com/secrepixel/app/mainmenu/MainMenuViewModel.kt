@@ -31,6 +31,7 @@ class MainMenuViewModel(application: Application) :
         if(selectedKey!=null){
             databaseOperationScope.launch {
                 removeKey(selectedKey!!)
+                selectedKey = null
             }
         }
     }

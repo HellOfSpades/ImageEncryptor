@@ -35,8 +35,8 @@
         />
 
     <Button
-        style="@style/PrimaryButtonStyle"
         android:id="@+id/encrypt_button_key_list_item"
+        style="@style/PrimaryButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_normal"
@@ -45,6 +45,16 @@
         android:text="Encrypt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/primaryDarkColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/encrypt_button_key_list_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
