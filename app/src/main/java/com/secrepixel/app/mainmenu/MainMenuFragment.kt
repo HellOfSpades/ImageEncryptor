@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,6 +27,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
 
     private lateinit var viewModel: MainMenuViewModel
     private lateinit var selectedKeyName: TextView
+    private lateinit var selectedKeyView: View
     private var onDeselectKeyListeners = ArrayList<OnDeselectKeyListener>()
 
 
@@ -42,6 +44,10 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         selectedKeyName = binding.selectedKeyName
         //get the view model
         viewModel = ViewModelProvider(this).get(MainMenuViewModel::class.java)
+
+        //hide the selected key view
+        selectedKeyView = binding.selectedKey
+        selectedKeyView.visibility = View.GONE
 
         //set the recycle view adapter for the keys
         val keyRecycleViewAdapter = KeyRecycleViewAdapter(this)
@@ -94,6 +100,10 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         }
         binding.mainMenuDelleteKeyButton.setOnClickListener {
             viewModel.onClickDeleteKeyButton()
+            selectedKeyView.visibility = View.GONE
+            onDeselectKeyListeners.forEach() {
+                it.onDeselectKey(null)
+            }
         }
 
         val bindingRoot = binding.root
@@ -111,9 +121,20 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
      * called when user taps one of the keys
      */
     override fun onSelectKey(key: Key) {
+        if(key==viewModel.selectedKey){
+            onDeselectKeyListeners.forEach() {
+                it.onDeselectKey(null)
+            }
+            selectedKeyView.visibility = View.GONE
+            viewModel.selectedKey = null
+            return
+        }
+
+        //change and show the selected key view
+        selectedKeyName.text = key.name
+        selectedKeyView.visibility = View.VISIBLE
         //change the selected key
         viewModel.selectedKey = key
-        selectedKeyName.text = key.name
         //notify that the previous key was deselected
         onDeselectKeyListeners.forEach() {
             it.onDeselectKey(viewModel.selectedKey)
@@ -149,4 +170,11 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         }
     }
 
+    /**
+     * when fragment starts
+     */
+    override fun onStart() {
+        super.onStart()
+
+    }
 }
