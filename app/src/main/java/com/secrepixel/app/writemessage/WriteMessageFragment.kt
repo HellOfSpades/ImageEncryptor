@@ -2,7 +2,6 @@ package com.secrepixel.app.writemessage
 
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,14 +14,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import com.secrepixel.app.databinding.FragmentWriteMessageBinding
 import com.example.imageencryptorlibrary.encryption.PPKeyImageEncryptor
 import com.secrepixel.app.*
+import com.secrepixel.app.tutorialtools.TutorialFragmentIterator
+import com.secrepixel.app.tutorialtools.TutorialPreferenceKeys
+import com.secrepixel.app.writemessage.tutorial.WriteMessageTutorialWritingAMessageFragment
 import timber.log.Timber
 import java.math.BigInteger
 
@@ -37,6 +37,8 @@ class WriteMessageFragment : Fragment() {
 
     //fragments binding
     private lateinit var binding: FragmentWriteMessageBinding
+
+    private lateinit var tutorialView: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +61,8 @@ class WriteMessageFragment : Fragment() {
             BigInteger(key.modulus),
             BigInteger(key.publicExponent)
         )
-
+        //getting the tutorial view
+        tutorialView = binding.tutorial
         //initialing listeners
         binding.chooseImageButton.setOnClickListener { this.onClickChooseImage() }
         binding.makeImageButton.setOnClickListener {
@@ -176,5 +179,53 @@ class WriteMessageFragment : Fragment() {
             binding.writeMessageFileTotalSymbolsTextView.text = getString(R.string.total_symbols)+" "+viewModel.symbolCapacity.toString()
             binding.symbolsLeftTextView.text = getString(R.string.symbols_left)+" "+(viewModel.symbolCapacity-binding.inputMessageTextView.text.length)
         }
+    }
+
+    override fun onResume() {
+        //if its the first time the user opens this fragment run the tutorial that will guide the user
+        super.onResume()
+        val tutorialKey = TutorialPreferenceKeys.WRITE_MESSAGE_FRAGMENT_TUTORIAL_KEY.key
+        val firstTime = requireActivity().getPreferences(AppCompatActivity.MODE_PRIVATE).getBoolean(tutorialKey, true)
+        if (firstTime) {
+            runTutorial()
+            requireActivity().getPreferences(AppCompatActivity.MODE_PRIVATE).edit()
+                .putBoolean(tutorialKey, false).apply()
+        }
+    }
+
+    /**
+     * start tutorial for this fragment
+     */
+    private fun runTutorial() {
+        val tutorial = TutorialFragmentIterator(
+            arrayOf(
+                WriteMessageTutorialWritingAMessageFragment()
+            ))
+
+        tutorialView.visibility = View.VISIBLE
+
+        val nextFragment = tutorial.next();
+        changeTutorialFragment(nextFragment)
+
+        tutorialView.setOnClickListener(){
+            if(!tutorial.hasNext()){
+                tutorialView.visibility = View.GONE
+                return@setOnClickListener;
+            }
+            val nextFragment = tutorial.next();
+            changeTutorialFragment(nextFragment)
+        }
+    }
+
+    /**
+     * change tutorial fragment
+     */
+    private fun changeTutorialFragment(nextFragment: Fragment){
+        val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
+        ft.replace(R.id.tutorial, nextFragment)
+
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 }

@@ -180,5 +180,12 @@
                 app:layout_constraintStart_toEndOf="@+id/choose_image_button"
                 app:layout_constraintTop_toTopOf="@+id/choose_image_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tutorial"
+            android:visibility="visible"
+            >
+        </FrameLayout>
     </FrameLayout>
 </layout>
