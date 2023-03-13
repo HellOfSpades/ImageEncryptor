@@ -1,0 +1,23 @@
+package com.secrepixel.app.writemessage.tutorial
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.secrepixel.app.R
+
+class WriteMessageTutorialWritingAMessageFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(
+            R.layout.fragment_write_message_tutorial_writing_a_message,
+            container,
+            false
+        )
+    }
+}

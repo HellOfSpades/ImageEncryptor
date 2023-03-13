@@ -1,21 +1,28 @@
 package com.secrepixel.app.mainmenu
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.secrepixel.app.tutorialtools.TutorialPreferenceKeys
 import com.secrepixel.app.R
+import com.secrepixel.app.tutorialtools.TutorialFragmentIterator
 import com.secrepixel.app.databinding.FragmentMainMenuBinding
 import com.secrepixel.app.keyinfo.Key
+import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialPressThePlussButton
+import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialWelcomeToSecrepixelFragment
+import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialWhatSecrepixelDoes
 import timber.log.Timber
 
 
@@ -29,6 +36,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
     private lateinit var selectedKeyName: TextView
     private lateinit var selectedKeyView: View
     private var onDeselectKeyListeners = ArrayList<OnDeselectKeyListener>()
+    private lateinit var tutorialView: View
 
 
     override fun onCreateView(
@@ -48,6 +56,9 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         //hide the selected key view
         selectedKeyView = binding.selectedKey
         selectedKeyView.visibility = View.GONE
+        //get the tutorial view
+        tutorialView = binding.tutorial
+        tutorialView.visibility = View.GONE
 
         //set the recycle view adapter for the keys
         val keyRecycleViewAdapter = KeyRecycleViewAdapter(this)
@@ -66,7 +77,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
         }
         binding.keyDetailsButton.setOnClickListener() {
             //don't show the menu if the key is not selected
-            if(viewModel.selectedKey==null){
+            if (viewModel.selectedKey == null) {
                 Toast.makeText(this.context, "please select a key first", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -121,7 +132,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
      * called when user taps one of the keys
      */
     override fun onSelectKey(key: Key) {
-        if(key==viewModel.selectedKey){
+        if (key == viewModel.selectedKey) {
             onDeselectKeyListeners.forEach() {
                 it.onDeselectKey(null)
             }
@@ -164,7 +175,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
      */
     fun restoreInstanceState(savedInstanceState: Bundle) {
         val selectedKey = savedInstanceState.get("selected_key") as Key?
-        if(selectedKey!=null){
+        if (selectedKey != null) {
 
             onSelectKey(selectedKey)
         }
@@ -176,5 +187,57 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
     override fun onStart() {
         super.onStart()
 
+    }
+
+    override fun onResume() {
+        //if its the first time the user opens this fragment run the tutorial that will guide the user
+        super.onResume()
+        val tutorialKey = TutorialPreferenceKeys.MAIN_MENU_FRAGMENT_TUTORIAL_KEY.key
+
+        val firstTime = requireActivity().getPreferences(AppCompatActivity.MODE_PRIVATE)
+            .getBoolean(tutorialKey, true)
+        if (firstTime) {
+            runTutorial()
+            requireActivity().getPreferences(AppCompatActivity.MODE_PRIVATE).edit()
+                .putBoolean(tutorialKey, false).apply()
+        }
+    }
+
+    /**
+     * start tutorial for this fragment
+     */
+    private fun runTutorial() {
+        val tutorial = TutorialFragmentIterator(
+            arrayOf(
+                MainMenuTutorialWelcomeToSecrepixelFragment(),
+                MainMenuTutorialWhatSecrepixelDoes(),
+                MainMenuTutorialPressThePlussButton()
+            ))
+
+        tutorialView.visibility = View.VISIBLE
+
+        val nextFragment = tutorial.next();
+        changeTutorialFragment(nextFragment)
+
+        tutorialView.setOnClickListener(){
+            if(!tutorial.hasNext()){
+                tutorialView.visibility = View.GONE
+                return@setOnClickListener;
+            }
+            val nextFragment = tutorial.next();
+            changeTutorialFragment(nextFragment)
+        }
+    }
+
+    /**
+     * change tutorial fragment
+     */
+    private fun changeTutorialFragment(nextFragment: Fragment){
+        val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
+        ft.replace(R.id.tutorial, nextFragment)
+
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        ft.addToBackStack(null)
+        ft.commit()
     }
 }
