@@ -1,6 +1,8 @@
 package com.secrepixel.app.mainmenu
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,14 +17,14 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.secrepixel.app.tutorialtools.TutorialPreferenceKeys
 import com.secrepixel.app.R
-import com.secrepixel.app.tutorialtools.TutorialFragmentIterator
 import com.secrepixel.app.databinding.FragmentMainMenuBinding
 import com.secrepixel.app.keyinfo.Key
 import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialPressThePlussButton
 import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialWelcomeToSecrepixelFragment
 import com.secrepixel.app.mainmenu.tutorial.MainMenuTutorialWhatSecrepixelDoes
+import com.secrepixel.app.tutorialtools.TutorialFragmentIterator
+import com.secrepixel.app.tutorialtools.TutorialPreferenceKeys
 import timber.log.Timber
 
 
@@ -110,11 +112,21 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
             popupMenu.show()
         }
         binding.mainMenuDelleteKeyButton.setOnClickListener {
-            viewModel.onClickDeleteKeyButton()
-            selectedKeyView.visibility = View.GONE
-            onDeselectKeyListeners.forEach() {
-                it.onDeselectKey(null)
-            }
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("Warning")
+                .setMessage("Are you sure you want to delete this key? You will not be able to undo this.")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes,
+                    DialogInterface.OnClickListener { dialog, whichButton ->
+                        viewModel.onClickDeleteKeyButton()
+                        selectedKeyView.visibility = View.GONE
+                        onDeselectKeyListeners.forEach() {
+                            it.onDeselectKey(null)
+                        }
+                    })
+                .setNegativeButton(android.R.string.no, null).show()
+
         }
 
         val bindingRoot = binding.root
@@ -212,15 +224,16 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
                 MainMenuTutorialWelcomeToSecrepixelFragment(),
                 MainMenuTutorialWhatSecrepixelDoes(),
                 MainMenuTutorialPressThePlussButton()
-            ))
+            )
+        )
 
         tutorialView.visibility = View.VISIBLE
 
         val nextFragment = tutorial.next();
         changeTutorialFragment(nextFragment)
 
-        tutorialView.setOnClickListener(){
-            if(!tutorial.hasNext()){
+        tutorialView.setOnClickListener() {
+            if (!tutorial.hasNext()) {
                 tutorialView.visibility = View.GONE
                 return@setOnClickListener;
             }
@@ -232,7 +245,7 @@ class MainMenuFragment : Fragment(), OnSelectKeyListener {
     /**
      * change tutorial fragment
      */
-    private fun changeTutorialFragment(nextFragment: Fragment){
+    private fun changeTutorialFragment(nextFragment: Fragment) {
         val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
         ft.replace(R.id.tutorial, nextFragment)
 
