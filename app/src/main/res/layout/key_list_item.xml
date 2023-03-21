@@ -16,10 +16,10 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/encrypt_button_key_list_item"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/decrypt_button_key_list_item"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/encrypt_button_key_list_item" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         style="@style/PrimaryButtonStyle"
@@ -39,22 +39,18 @@
         style="@style/PrimaryButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginBottom="@dimen/spacing_normal"
         android:text="Encrypt"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/key_name_text_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/key_name_text_view" />
 
     <View
         android:id="@+id/view4"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="1dp"
         android:background="@color/primaryDarkColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/encrypt_button_key_list_item" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
